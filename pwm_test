@@ -1,0 +1,9 @@
+ServoControlPin = 4
+PWMfrequency = 50 -- Set PWM frequency
+PWMDutyCycle = 512  -- Set PWM duty cycle in between 0-1023
+
+pwm.setup(ServoControlPin, PWMfrequency, PWMDutyCycle)-- Setup PWM
+pwm.start(ServoControlPin)   -- Start PWM on control pin
+
+pwm.setduty(ServoControlPin, 1000)-- set PWM duty cycle
+tmr.delay(1000)
