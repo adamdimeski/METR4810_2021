@@ -3,6 +3,7 @@
   <script src="js/jquery-3.2.1.min.js"></script>
 
   <script src="js/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.js"></script>
   <script src="js/jcanvas.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <head>
@@ -58,8 +59,8 @@
           <h2> Control</h2>
           <div class = "row" style = "text-align: left;">
             <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Abort</label>
-            <button class = "col-2 control_button">Activate</button>
-            <button class = "col-2 control_button">Deactivate</button>
+            <button id = "abortActivateBtn" class = "col-2 control_button">Activate</button>
+            <button id = "abortDeactivateBtn"class = "col-2 control_button">Deactivate</button>
           </div>
           <br>
           <div class = "row">

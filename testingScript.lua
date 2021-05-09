@@ -4,7 +4,7 @@ ts_stop = 0
 servo_pos = 50
 
 
-dockRelease = 1 -- 0 for latched, 1 for unlatched
+dockRelease = 0 -- 0 for latched, 1 for unlatched
 backupArrest = 0 -- o for running, 1 for stopped
 abort = 0 -- 0 for normal operation ,1 for abort
 drServoPos = -1 -- Servo position for dock release, -1 if not being used
@@ -39,7 +39,7 @@ function setDRPos(drServoPos)
 end
 
 
-function update_status()
+function receiveData()
     -- A secondayr loop function, this function is called every time a web request is received
     -- Puts received data into variables and called any functions that will update the lander
     --   based on the new data
@@ -51,8 +51,25 @@ function update_status()
     thrustPos = tonumber(status["thrustPos"])
     start = tonumber(status["start"])
     restart = tonumber(status["restart"])
+    powerCycle = tonumber(status["power"])
     
     
+end
+
+function sendData()
+    sendStr = "";
+    sendStr = sendStr.. dockRelease..",";
+    sendStr = sendStr.. backupArrest.. ",";
+    sendStr = sendStr.. abort.. ",";
+    sendStr = sendStr.. drServoPos.. ",";
+    sendStr = sendStr.. baServoPos.. ",";
+    sendStr = sendStr.. thrustPos.. ",";
+    sendStr = sendStr.. start.. ",";
+    sendStr = sendStr.. restart.. ",";
+    sendStr = sendStr.. powerCycle;
+
+    -- use .. instead of + when adding strings
+
 end
 
 
@@ -86,15 +103,15 @@ srv=net.createServer(net.TCP)
 srv:listen(80,function(conn)
   conn:on("receive",function(conn,payload)
     string_payload = tostring(payload)
-    --for k, v in string.gmatch( string_payload, "(%w+)=(%w+)" ) do
-        --status[k] = v
-    --end
+    for k, v in string.gmatch( string_payload, "(%w+)=(%w+)" ) do
+        status[k] = v
+    end
     print(payload)
-    --update_status()
+    receiveData()
     
     conn:send("HTTP/1.1 200 OK\n")
     conn:send("\r\n\n\n")
-    conn:send("place csv in here to send back") 
+    conn:send(sendData()) 
   end)
   conn:on("sent",function(conn) conn:close() end)
 end)
