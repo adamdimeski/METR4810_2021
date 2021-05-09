@@ -25,6 +25,7 @@
 
     <div>
       <h2>Overview</h2>
+
   <h2 style = "text-align: center;">Control Panel</h2>
   <div id = "controlpanel" class = "row">
       <div id = "controlpanel_1" class = "col-4">
@@ -34,49 +35,53 @@
           <input class = "col control_button" type="text" id="ip_addr" style = "background-color: white; color: black"><br>
           <button class = "col-2 control_button" id = "ip_address_button">Set </button>
         </div>
-        <br>
+        <div class = "row">
+          <button class = "col-2 control_button" id = "send">Send Data </button>
+        </div>
         <br>
       </div>
       <div id = "controlpanel_2" class = "col-3">
         <div style = "text-align: center; margin-top: 0px; margin: 10px; font-size: 14px;">
-          <h2> Send</h2>
-          <div class = "row">
-            <label class = "col" style = "text-align: left;">Val1: </label>
-            <input class = "col control_button" type="text" id="val1" style = "background-color: white; color: black"><br>
+          <h2> Status</h2>
+          <div class = "row" style = "">
+            <label class = "col-5" style = "text-align: left;">Start</label>
           </div>
           <br>
           <div class = "row">
-            <label class = "col" style = "text-align: left;">Val2: </label>
-            <input class = "col control_button" type="text" id="val2" style = "background-color: white; color: black"><br>
+            <label class = "col-6" style = "text-align: left;" >thrust %</label>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col" style = "text-align: left;">Val3: </label>
-            <input class = "col control_button" type="text" id="val3" style = "background-color: white; color: black"><br>
-          </div>
-          <br>
-          <div class = "row">
-            <label class = "col" style = "text-align: left;">ETC: </label>
-            <input class = "col control_button" type="text" id="etc" style = "background-color: white; color: black"><br>
-          </div>
-
-          <br>
-          <div class = "row">
-            <button class = "col-3 control_button" id = "send_button">Send</button>
-          </div>
-
-        </div>
       </div>
-
-      <div id = "controlpanel_3" class = "col-3">
+      </div>
+      <div id = "controlpanel_3" class = "col-4">
         <div style = "text-align: center; margin-top: 0px; margin: 10px; font-size: 14px;">
-          <h2> Receive</h2>
+          <h2> Control</h2>
+          <div class = "row" style = "text-align: left;">
+            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Abort</label>
+            <button class = "col-2 control_button">Activate</button>
+            <button class = "col-2 control_button">Deactivate</button>
+          </div>
+          <br>
           <div class = "row">
-            <textarea class = "col control_button" type="text" id="val1" style = "background-color: white; color: black"></textarea><br>
+            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Release</label>
+            <button class = "col-2 control_button">Drop</button>
+            <button class = "col-2 control_button">Reset</button>
           </div>
 
+          <br>
+          <div class = "row">
+            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Track Changer (T) Vol 36 min</label>
+            <button class = "col control_button" id = "tc">⬅➡</button>
+          </div>
+          <br>
+          <audio controls id = "pos_1"> <source src="pos_1.wav" type="audio/wav"></audio>
+          <audio controls id = "pos_2"> <source src="pos_2.wav" type="audio/wav"></audio>
         </div>
       </div>
+    </div>
+
+
+    </div>
 
 	</div>
 
@@ -84,7 +89,7 @@
 
   <!-- Copyright -->
   <div class="footer-copyright text-center py-3">
-    <p>METR4810 2021 <p>
+    <p>METR4810 TEAM 7 2020 <p>
   </div>
   <!-- Copyright -->
 

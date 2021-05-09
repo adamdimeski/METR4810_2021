@@ -1,3 +1,5 @@
+import math
+
 class Site:
 
     def __init__(self, rect):
@@ -12,12 +14,10 @@ class Site:
         self.calculateMean()
 
     def addBlueObject(self, rect):
-        x,y,w,h = rect
-        self.blueList.append((x,y,w,h))
+        self.blueList.append(rect)
 
     def addRedObject(self, rect):
-        x,y,w,h = rect
-        self.redList.append(x,y,w,h)
+        self.redList.append(rect)
 
     def calculateMean(self):
         self.meanX = 0
@@ -35,7 +35,15 @@ class Site:
         self.meanW = self.meanW / len(self.blueList)
         self.meanH = self.meanH / len(self.blueList)
 
+    def calculateDistance(self,rect):
+        x,y,w,h = rect
+        distX = (self.meanX + (self.meanW/2)) - (x + (w/2))
+        distY = (self.meanY + (self.meanH/2)) - (y + (h/2))
+        dist = math.sqrt(math.pow(distX, 2) + math.pow(distY,2))
+        return dist
+
     def isInside(self,rect):
+        #checks for inside mean box, completely inside and partially inside
         self.calculateMean()
         x,y,w,h = rect
         #print("----------------------------")
@@ -47,9 +55,28 @@ class Site:
             retVal = False
             for rect2 in self.blueList:
                 x2,y2,w2,h2 = rect2
-                if (x >= x2 and x <= x2 + w2 and y >= y2 and y <= y2 + h2):
+                if (x >= x2 and x <= (x2 + w2) and y >= y2 and y <= (y2 + h2)):
+                    #completely inside
+                    retVal = True
+                elif((x+w) >= x2 and (x+w) <= (x2+w2) and y > y2 and y < (y2+h2)):
+                    #right-top corner
+                    retVal = True
+                elif((x) >= x2 and (x) <= (x2+w2) and y > y2 and y < (y2+h2)):
+                    #left-top corner
+                    retVal = True
+                elif((x+w) >= x2 and (x+w) <= (x2+w2) and (y+h) > y2 and (y+h) < (y2+h2)):
+                    #right-bottom corner
+                    retVal = True
+                elif((x) >= x2 and (x) <= (x2+w2) and (y+h) > y2 and (y+h) < (y2+h2)):
+                    #left-bottom corner
                     retVal = True
             return retVal
+
+    def getGeo(self):
+        geo = self.meanH / self.meanW
+        if(geo < 1):
+            geo = 1.0/geo;
+        return geo
 
     def calculateWeight(self):
         self.weight = 1
