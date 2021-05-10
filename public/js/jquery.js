@@ -71,6 +71,15 @@ $("#abortDeactivateBtn").click(function(){
 		sendData();
 });
 
+$("#arrestActivateBtn").click(function(){
+		backupArrest = 1;
+		sendData();
+});
+
+$("#arrestDeactivateBtn").click(function(){
+		backupArrest = 0;
+		sendData();
+});
 
 $("#send").click(function(){
 		sendData();

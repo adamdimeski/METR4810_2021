@@ -1,14 +1,9 @@
-ts_dir = 0
-ts_dc = 0
-ts_stop = 0
-servo_pos = 50
-
 
 dockRelease = 0 -- 0 for latched, 1 for unlatched
 backupArrest = 0 -- o for running, 1 for stopped
 abort = 0 -- 0 for normal operation ,1 for abort
-drServoPos = -1 -- Servo position for dock release, -1 if not being used
-baServoPos = -1 -- Servo position for backup arrest, -1 if not being used
+drServoPos = 0 -- Servo position for dock release, -1 if not being used
+baServoPos =  -- Servo position for backup arrest, -1 if not being used
 thrustPos = 0 -- thrust percentage of EDF
 start = 0 -- start of mission, activates release from dock and activation of systems
 restart = 0 -- resets system for another mission, 0 for normal state, 1 for reset.
@@ -23,6 +18,11 @@ function setThrust(thrustPos)
 end
 
 function setBA(backupArrest)
+    if(backupArrest == 0)
+        pwm.setDuty(300)
+    else
+        pwm.setDuty(800)
+    end
 
 end
 
@@ -43,17 +43,15 @@ function receiveData()
     -- A secondayr loop function, this function is called every time a web request is received
     -- Puts received data into variables and called any functions that will update the lander
     --   based on the new data
-    dockRelease = tonumber(status["dockRelease"])
-    backupArrest = tonumber(status["backupArrest"])
-    abort = tonumber(status["abort"])
-    drServoPos = tonumber(status["drServoPoso"])
-    baServoPos = tonumber(status["baServoPos"])
-    thrustPos = tonumber(status["thrustPos"])
-    start = tonumber(status["start"])
-    restart = tonumber(status["restart"])
-    powerCycle = tonumber(status["power"])
-    
-    
+    dockRelease = tonumber(status.dockRelease)
+    backupArrest = tonumber(status.backupArrest)
+    abort = tonumber(status.abort)
+    drServoPos = tonumber(status.drServoPos)
+    baServoPos = tonumber(status.baServoPos)
+    thrustPos = tonumber(status.thrustPos)
+    start = tonumber(status.start)
+    restart = tonumber(status.restart)
+    powerCycle = tonumber(status.powerCycle)
 end
 
 function sendData()
@@ -67,13 +65,19 @@ function sendData()
     sendStr = sendStr.. start.. ",";
     sendStr = sendStr.. restart.. ",";
     sendStr = sendStr.. powerCycle;
-
+    
     -- use .. instead of + when adding strings
-
+    return sendStr
 end
+
+function update_status
 
 
 ------------------------ Initialisation Code goes here
+
+pwm.setup(5, 50, 500)
+pwm.start(5)
+
 -- setting up pwm for servos
 --setup function for communicating with atmega
 
@@ -106,9 +110,8 @@ srv:listen(80,function(conn)
     for k, v in string.gmatch( string_payload, "(%w+)=(%w+)" ) do
         status[k] = v
     end
-    print(payload)
+    --print(payload)
     receiveData()
-    
     conn:send("HTTP/1.1 200 OK\n")
     conn:send("\r\n\n\n")
     conn:send(sendData()) 
