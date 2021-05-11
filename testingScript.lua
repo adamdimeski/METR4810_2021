@@ -63,34 +63,6 @@ end
 --     end
 -- end
 
-function setupDockRelease()
-    -- Sets up the docking release mechanism (starts in closed position)
-    print("Setting up DR...")
-
-    dockRelease == 0 -- set status (start with DR closed)
-    pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY) -- setup pwm settings (50Hz)
-    pwm.start(DR_PIN) -- start sending pwm signal
-end
-
-function toggleDockRelease()
-    -- Toggles the dock release mechanism open/closed
-
-    print("Toggling...")
-    if(dockRelease == 0) then
-        -- If NOT currently released
-        -- Set the dock release to the open position
-        pwm.setduty(BA_PIN,DR_OPEN_DUTY)
-        -- Record our new status
-        dockRelease = 1
-    else
-        -- If currently released
-        -- Set the dock release to the closed position
-        pwm.setduty(BA_PIN,DR_CLOSED_DUTY)
-        -- Record our new status
-        dockRelease = 0
-    end
-end
-
 
 function receiveData()
     -- A secondary loop function, this function is called every time a web request is received
@@ -136,6 +108,34 @@ function setAngle(pin, angle)
         pwm.setduty(MOTOR_PIN, dutyCycle) -- set the servo to the given angle
     end
     -- If angle out of range do nothing
+end
+
+function setupDockRelease()
+    -- Sets up the docking release mechanism (starts in closed position)
+    print("Setting up DR...")
+
+    dockRelease == 0 -- set status (start with DR closed)
+    pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY) -- setup pwm settings (50Hz)
+    pwm.start(DR_PIN) -- start sending pwm signal
+end
+
+function toggleDockRelease()
+    -- Toggles the dock release mechanism open/closed
+
+    print("Toggling...")
+    if(dockRelease == 0) then
+        -- If NOT currently released
+        -- Set the dock release to the open position
+        pwm.setduty(BA_PIN,DR_OPEN_DUTY)
+        -- Record our new status
+        dockRelease = 1
+    else
+        -- If currently released
+        -- Set the dock release to the closed position
+        pwm.setduty(BA_PIN,DR_CLOSED_DUTY)
+        -- Record our new status
+        dockRelease = 0
+    end
 end
 
 -- --------------------------- ONE TIME SETUP CODE -------------------------- --
