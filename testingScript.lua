@@ -7,15 +7,22 @@ wifiPwd = "ayylmao0"
 
 -- Pin mappings
 MOTOR_PIN = 5
-BACKUP_ARREST_PIN = 6
 
+BA_PIN = 6
+
+DR_PIN = 5
+DR_CLOSED_DUTY = 76
+DR_OPEN_DUTY = 96
+
+-- Misc
+ZERO_DEG_DUTY = 52
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
 
 -- STATUS VARIABLES
 dockRelease = 0 -- 0 for latched, 1 for unlatched
-backupArrest = 0 -- o for running, 1 for stopped
+backupArrest = 0 -- 0 for running, 1 for stopped
 abort = 0 -- 0 for normal operation ,1 for abort
 drServoPos = 0 -- Servo position for dock release, -1 if not being used
 baServoPos = 0 -- Servo position for backup arrest, -1 if not being used
@@ -28,30 +35,60 @@ status={}
 -- -------------------------------- FUNCTIONS ------------------------------- --
 
 function setBackupArrest()
-        --pwm duty cycle between 18 and 134
-        if( baServoPos > 0) then
-            pwm.setduty(5,baServoPos)
+    --pwm duty cycle between 18 and 134
+    if( baServoPos > 0) then
+        pwm.setduty(BA_PIN,baServoPos)
+    else
+        if(backupArrest == 0) then
+            pwm.setduty(5,76)
         else
-            if(backupArrest == 0) then
-                    pwm.setduty(5,76)
-                else
-                    pwm.setduty(5,90)
-                end
+            pwm.setduty(5,90)
         end
+    end
 end
 
+-- function setDockRelease()
+--     -- WTF does this function do! no docs
+--     --pwm duty cycle between 18 and 134
+--     if( drServoPos > 0) then
+--         pwm.setduty(BA_PIN,drServoPos)
+--     else
+--         if(dockRelease == 0) then
+--             -- Set the dock release to the closed position
+--             pwm.setduty(BA_PIN,DR_CLOSED_DUTY)
+--         else
+--             -- Set the dock release to the open position
+--             pwm.setduty(BA_PIN,DR_OPEN_DUTY)
+--         end
+--     end
+-- end
 
-function setDockRelease()
-        --pwm duty cycle between 18 and 134
-        if( drServoPos > 0) then
-            pwm.setduty(6,drServoPos)
-        else
-            if(dockRelease == 0) then
-                    pwm.setduty(6,96)
-                else
-                    pwm.setduty(6,76)
-                end
-        end
+function setupDockRelease()
+    -- Sets up the docking release mechanism (starts in closed position)
+    print("Setting up DR...")
+
+    dockRelease == 0 -- set status (start with DR closed)
+    pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY) -- setup pwm settings (50Hz)
+    pwm.start(DR_PIN) -- start sending pwm signal
+end
+
+function toggleDockRelease()
+    -- Toggles the dock release mechanism open/closed
+
+    print("Toggling...")
+    if(dockRelease == 0) then
+        -- If NOT currently released
+        -- Set the dock release to the open position
+        pwm.setduty(BA_PIN,DR_OPEN_DUTY)
+        -- Record our new status
+        dockRelease = 1
+    else
+        -- If currently released
+        -- Set the dock release to the closed position
+        pwm.setduty(BA_PIN,DR_CLOSED_DUTY)
+        -- Record our new status
+        dockRelease = 0
+    end
 end
 
 
@@ -96,31 +133,46 @@ function setAngle(pin, angle)
     if angle>0 and angle<180 then
         dutyTime = 1 + 1*(angle/180) -- time of pulse in ms
         dutyCycle = (dutyTime/20) * 1023 -- the duty cucle out of 1023
-        pwm.setup(MOTOR_PIN, 50, dutyCycle) -- set the signal to give the servo
-        pwm.start(BACKUP_ARREST_PIN) -- send the signal to the servo
+        pwm.setduty(MOTOR_PIN, dutyCycle) -- set the servo to the given angle
     end
     -- If angle out of range do nothing
 end
 
+-- --------------------------- ONE TIME SETUP CODE -------------------------- --
+
+function oneTimeSetup()
+    print("Doing one-time-setup...")
+
+    -- Setup docking release
+    setupDockRelease()
+
+    -- Setup motor
+    -- pwm.setup(MOTOR_PIN, 50, ZERO_DEG_DUTY)
+    
+    -- Setup backup arrestor
+    -- pwm.setup(BA_PIN, 50, ZERO_DEG_DUTY)
+
+    -- -- pwm.start(MOTOR_PIN)
+    -- setAngle(BA_PIN, 0)
+    -- -- setting up pwm for servos
+    -- --...
+end
+
+
 -- -------------------------------- MAIN CODE ------------------------------- --
-
--- Setup pwm on pin 5 for duty cycle of 76/1023 at 50Hz 
-pwm.setup(MOTOR_PIN, 50, 76)
--- Setup pwm on pin 6 for duty cycle of 76/1023 at 50Hz 
-pwm.setup(BACKUP_ARREST_PIN, 50, 76)
-
-pwm.start(MOTOR_PIN)
-pwm.start(BACKUP_ARREST_PIN)
--- setting up pwm for servos
---...
 
 
 function main()
-    setBackupArrest()
-    setDockRelease()
+    print("Running main loop...")
 
+    -- Toggle the docking release open/closed
+    toggleDockRelease()
+
+    -- setBackupArrest()
+    -- setDockRelease()
 end
 
+-- ----------------------- OTHER NETWORKING PROCESSES ----------------------- --
 
 --Setup WiFi and other wifi related stuff below here
 station_cfg={}
@@ -142,13 +194,13 @@ sys:alarm(1000, tmr.ALARM_SEMI, function()
         print("Got IP. "..wifi.sta.getip())
         
         -- Setup the main loop with witchcraft
+        oneTimeSetup()
         mainTmr = tmr.create()
         mainTmr:register(1000, tmr.ALARM_AUTO, function() main() end)
         if not mainTmr:start() then print("uh oh") end
         wifi.sta.sethostname("LANDER-ESP8266")
     end
 end)
-print("2b")
 
 -- Start up the remote monitoring server
 srv=net.createServer(net.TCP)
