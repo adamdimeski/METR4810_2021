@@ -1,3 +1,10 @@
+--[[ 
+    main_v2.lua
+
+    Runs all of the operational code for the lander
+ ]]
+
+-- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 
 dockRelease = 0 -- 0 for latched, 1 for unlatched
 backupArrest = 0 -- o for running, 1 for stopped
@@ -10,14 +17,20 @@ restart = 0 -- resets system for another mission, 0 for normal state, 1 for rese
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 status={}
 
------------------------- Functions go below here
+-- -------------------------------- FUNCTIONS ------------------------------- --
 
 function setThrust(thrustPos)
+    --[[ 
+        This function does ...?
+     ]] 
 
-    
 end
 
 function setBA(backupArrest)
+    --[[ 
+        This function does ...?
+     ]]
+
     if(backupArrest == 0)
         pwm.setDuty(300)
     else
@@ -27,14 +40,23 @@ function setBA(backupArrest)
 end
 
 function setDR(dockRelease)
+    --[[ 
+        This function does ...?
+     ]] 
 
 end
 
 function setBAPos(baServoPos)
+    --[[ 
+        This function does ...?
+     ]] 
 
 end
 
 function setDRPos(drServoPos)
+    --[[ 
+        This function does ...?
+     ]] 
 
 end
 
@@ -55,6 +77,10 @@ function receiveData()
 end
 
 function sendData()
+    --[[ 
+        This function sends data to the webpage in csv format
+     ]]
+    
     sendStr = "";
     sendStr = sendStr.. dockRelease..",";
     sendStr = sendStr.. backupArrest.. ",";
@@ -71,9 +97,13 @@ function sendData()
 end
 
 function update_status
-
-
------------------------- Initialisation Code goes here
+    --[[ 
+        This function does ...?
+     ]] 
+     
+end
+    
+-- -------------------------------- MAIN LOOP ------------------------------- --
 
 pwm.setup(5, 50, 500)
 pwm.start(5)
