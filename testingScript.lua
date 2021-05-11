@@ -1,5 +1,9 @@
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 
+-- Wifi settings
+wifissid = "Alex's iPhone 6"
+wifipwd = "ayylmao0"
+
 dockRelease = 0 -- 0 for latched, 1 for unlatched
 backupArrest = 0 -- o for running, 1 for stopped
 abort = 0 -- 0 for normal operation ,1 for abort
@@ -90,8 +94,8 @@ pwm.start(5)
 
 --Setup WiFi and other wifi related stuff below here
 station_cfg={}
-station_cfg.ssid="Alex's iPhone 6"
-station_cfg.pwd="ayylmao0"
+station_cfg.ssid=wifissid
+station_cfg.pwd=wifipwd
 station_cfg.save=false
 wifi.setmode(wifi.STATION, true)
 wifi.sta.config(station_cfg)
