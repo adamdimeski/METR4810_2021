@@ -1,8 +1,17 @@
--- ---------------------------- GLOBAL VARIABLES ---------------------------- --
+-- -------------------------- CONSTANTS / SETTINGS -------------------------- --
+-- Constants is for things that will stay "constant" throughout execution
 
 -- Wifi settings
 wifiSsid = "Alex's iPhone 6"
 wifiPwd = "ayylmao0"
+
+-- Pin mappings
+MOTOR_PIN = 5
+BACKUP_ARREST_PIN = 6
+
+
+-- ---------------------------- GLOBAL VARIABLES ---------------------------- --
+-- Variables is for things that will change throughout execution
 
 -- STATUS VARIABLES
 dockRelease = 0 -- 0 for latched, 1 for unlatched
@@ -16,7 +25,8 @@ restart = 0 -- resets system for another mission, 0 for normal state, 1 for rese
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 status={}
 
------------------------- Functions go below here
+-- -------------------------------- FUNCTIONS ------------------------------- --
+
 function setBackupArrest()
         --pwm duty cycle between 18 and 134
         if( baServoPos > 0) then
@@ -79,14 +89,31 @@ function sendData()
     return sendStr
 end
 
+function setAngle(pin, angle)
+    -- Set the angle of a servo (0-180) (1ms-2ms pulse)
+    -- Does nothing if given an angle outside 0-180
+
+    if angle>0 and angle<180 then
+        dutyTime = 1 + 1*(angle/180) -- time of pulse in ms
+        dutyCycle = (dutyTime/20) * 1023 -- the duty cucle out of 1023
+        pwm.setup(MOTOR_PIN, 50, dutyCycle) -- set the signal to give the servo
+        pwm.start(BACKUP_ARREST_PIN) -- send the signal to the servo
+    end
+    -- If angle out of range do nothing
+end
+
 -- -------------------------------- MAIN CODE ------------------------------- --
 
-pwm.setup(5, 50, 76)
-pwm.setup(6, 50, 76)
-pwm.start(5)
-pwm.start(6)
+-- Setup pwm on pin 5 for duty cycle of 76/1023 at 50Hz 
+pwm.setup(MOTOR_PIN, 50, 76)
+-- Setup pwm on pin 6 for duty cycle of 76/1023 at 50Hz 
+pwm.setup(BACKUP_ARREST_PIN, 50, 76)
+
+pwm.start(MOTOR_PIN)
+pwm.start(BACKUP_ARREST_PIN)
 -- setting up pwm for servos
 --...
+
 
 function main()
     setBackupArrest()
@@ -103,15 +130,18 @@ station_cfg.save=false
 wifi.setmode(wifi.STATION, true)
 wifi.sta.config(station_cfg)
 
--- Connect to wifi
+-- Connect to wifi and setup the main loop
 sys = tmr.create()
 sys:alarm(1000, tmr.ALARM_SEMI, function()
     if wifi.sta.getip()== nil then
+        -- If not connected to wifi yet
         print("Looking for IP")
         sys:start()
     else
+        -- If connected to wifi
         print("Got IP. "..wifi.sta.getip())
-        --create timer after getting ip address
+        
+        -- Setup the main loop with witchcraft
         mainTmr = tmr.create()
         mainTmr:register(1000, tmr.ALARM_AUTO, function() main() end)
         if not mainTmr:start() then print("uh oh") end
@@ -122,33 +152,23 @@ print("2b")
 
 -- Start up the remote monitoring server
 srv=net.createServer(net.TCP)
-print("3")
 srv:listen(80,function(conn)
-    print("4")
     conn:on("receive",function(conn,payload)
-        print("5")
-
-    print("meme")
 
     -- Recieve data from the server
     string_payload = tostring(payload)
-    print("meme")
     for k, v in string.gmatch( string_payload, "(%w+)=(%w+)" ) do
         status[k] = v
     end
 
     print(payload) -- Print what the website sent
     receiveData() -- use the recieved data to repopulate our status variables
-    
     -- print(status.abort)
 
     -- Send data to the server
     conn:send("HTTP/1.1 200 OK\n")
     conn:send("\r\n\n\n")
     conn:send(sendData()) -- send our current status variables to the website
-
-    -- print(status.abort)
-
   end)
   conn:on("sent",function(conn) conn:close() end)
 end)
