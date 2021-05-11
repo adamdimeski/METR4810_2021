@@ -1,3 +1,4 @@
+-- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 
 dockRelease = 0 -- 0 for latched, 1 for unlatched
 backupArrest = 0 -- o for running, 1 for stopped
@@ -10,7 +11,7 @@ restart = 0 -- resets system for another mission, 0 for normal state, 1 for rese
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 status={}
 
------------------------- Functions go below here
+-- -------------------------------- FUNCTIONS ------------------------------- --
 
 function setThrust(thrustPos)
 
@@ -76,7 +77,7 @@ end
 function update_status
 
 
------------------------- Initialisation Code goes here
+-- -------------------------------- MAIN CODE ------------------------------- --
 
 pwm.setup(5, 50, 500)
 pwm.start(5)
