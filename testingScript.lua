@@ -16,12 +16,11 @@ restart = 0 -- resets system for another mission, 0 for normal state, 1 for rese
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 status={}
 
-<<<<<<< HEAD
 ------------------------ Functions go below here
 function setBackupArrest()
         --pwm duty cycle between 18 and 134
         if( baServoPos > 0) then
-            pwm.setduty(5,baServoPos)   
+            pwm.setduty(5,baServoPos)
         else
             if(backupArrest == 0) then
                     pwm.setduty(5,76)
@@ -29,19 +28,13 @@ function setBackupArrest()
                     pwm.setduty(5,90)
                 end
         end
-=======
--- -------------------------------- FUNCTIONS ------------------------------- --
-
-function setThrust(thrustPos)
-
-    
->>>>>>> ee1227109ed7df966547c8141ad3a5617b5f6586
 end
+
 
 function setDockRelease()
         --pwm duty cycle between 18 and 134
         if( drServoPos > 0) then
-            pwm.setduty(6,drServoPos)   
+            pwm.setduty(6,drServoPos)
         else
             if(dockRelease == 0) then
                     pwm.setduty(6,96)
@@ -78,19 +71,12 @@ function sendData()
     sendStr = sendStr.. start.. ",";
     sendStr = sendStr.. restart.. ",";
     sendStr = sendStr.. powerCycle;
-    
+
     -- use .. instead of + when adding strings
     return sendStr
 end
 
-<<<<<<< HEAD
------------------------- Initialisation Code goes here
-=======
-function update_status
-
-
 -- -------------------------------- MAIN CODE ------------------------------- --
->>>>>>> ee1227109ed7df966547c8141ad3a5617b5f6586
 
 pwm.setup(5, 50, 76)
 pwm.setup(6, 50, 76)
@@ -107,8 +93,6 @@ function main()
 end
 
 
-
-
 --Setup WiFi and other wifi related stuff below here
 station_cfg={}
 station_cfg.ssid=wifiSsid
@@ -119,8 +103,8 @@ wifi.sta.config(station_cfg)
 
 
 sys = tmr.create()
-sys:alarm(1000, tmr.ALARM_SEMI, function() 
-    if wifi.sta.getip()== nil then 
+sys:alarm(1000, tmr.ALARM_SEMI, function()
+    if wifi.sta.getip()== nil then
         print("Looking for IP")
         sys:start()
     else
@@ -130,7 +114,7 @@ sys:alarm(1000, tmr.ALARM_SEMI, function()
         mainTmr:register(1000, tmr.ALARM_AUTO, function() main() end)
         if not mainTmr:start() then print("uh oh") end
         wifi.sta.sethostname("LANDER-ESP8266")
-    end 
+    end
 end)
 
 
