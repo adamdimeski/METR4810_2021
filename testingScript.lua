@@ -5,7 +5,7 @@ wifiSsid="Alex's iPhone 6" -- Change for your hotspot
 wifiPwd="ayylmao0" -- Change for your hotspot
 
 -- STATUS VARIABLES
-dockRelease = 0 -- 0 for latched, 1 for unlatched
+dockRelease = 1 -- 0 for latched, 1 for unlatched
 backupArrest = 0 -- o for running, 1 for stopped
 abort = 0 -- 0 for normal operation ,1 for abort
 drServoPos = 0 -- Servo position for dock release, -1 if not being used
@@ -16,32 +16,33 @@ restart = 0 -- resets system for another mission, 0 for normal state, 1 for rese
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 status={}
 
------------------------- Functions go below here
+-- -------------------------------- FUNCTIONS ------------------------------- --
+
 function setBackupArrest()
-        --pwm duty cycle between 18 and 134
-        if( baServoPos > 0) then
-            pwm.setduty(5,baServoPos)
-        else
-            if(backupArrest == 0) then
-                    pwm.setduty(5,76)
-                else
-                    pwm.setduty(5,90)
-                end
-        end
+    --pwm duty cycle between 18 and 134
+    if( baServoPos > 0) then
+        pwm.setduty(5,baServoPos)
+    else
+        if(backupArrest == 0) then
+                pwm.setduty(5,76)
+            else
+                pwm.setduty(5,90)
+            end
+    end
 end
 
 
 function setDockRelease()
-        --pwm duty cycle between 18 and 134
-        if( drServoPos > 0) then
-            pwm.setduty(6,drServoPos)
-        else
-            if(dockRelease == 0) then
-                    pwm.setduty(6,96)
-                else
-                    pwm.setduty(6,76)
-                end
-        end
+    --pwm duty cycle between 18 and 134
+    if( drServoPos > 0) then
+        pwm.setduty(6,drServoPos)
+    else
+        if(dockRelease == 0) then
+                pwm.setduty(6,96)
+            else
+                pwm.setduty(6,76)
+            end
+    end
 end
 
 
@@ -76,7 +77,7 @@ function sendData()
     return sendStr
 end
 
--- -------------------------------- MAIN CODE ------------------------------- --
+-- --------------------------- ONE TIME SETUP CODE -------------------------- --
 
 pwm.setup(5, 50, 76)
 pwm.setup(6, 50, 76)
@@ -85,6 +86,7 @@ pwm.start(6)
 -- setting up pwm for servos
 --setup function for communicating with atmega
 
+-- -------------------------------- MAIN CODE ------------------------------- --
 
 function main()
     setBackupArrest()
@@ -92,6 +94,7 @@ function main()
 
 end
 
+-- --------------------- CONCURRENT NETWORKING PROCESSES -------------------- --
 
 --Setup WiFi and other wifi related stuff below here
 station_cfg={}
