@@ -3,7 +3,7 @@ dockRelease = 0 -- 0 for latched, 1 for unlatched
 backupArrest = 0 -- o for running, 1 for stopped
 abort = 0 -- 0 for normal operation ,1 for abort
 drServoPos = 0 -- Servo position for dock release, -1 if not being used
-baServoPos =  -- Servo position for backup arrest, -1 if not being used
+baServoPos = 0 -- Servo position for backup arrest, -1 if not being used
 thrustPos = 0 -- thrust percentage of EDF
 start = 0 -- start of mission, activates release from dock and activation of systems
 restart = 0 -- resets system for another mission, 0 for normal state, 1 for reset.
@@ -11,31 +11,30 @@ powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 status={}
 
 ------------------------ Functions go below here
-
-function setThrust(thrustPos)
-
-    
+function setBackupArrest()
+        --pwm duty cycle between 18 and 134
+        if( baServoPos > 0) then
+            pwm.setduty(5,baServoPos)   
+        else
+            if(backupArrest == 0) then
+                    pwm.setduty(5,76)
+                else
+                    pwm.setduty(5,90)
+                end
+        end
 end
 
-function setBA(backupArrest)
-    if(backupArrest == 0)
-        pwm.setDuty(300)
-    else
-        pwm.setDuty(800)
-    end
-
-end
-
-function setDR(dockRelease)
-
-end
-
-function setBAPos(baServoPos)
-
-end
-
-function setDRPos(drServoPos)
-
+function setDockRelease()
+        --pwm duty cycle between 18 and 134
+        if( drServoPos > 0) then
+            pwm.setduty(6,drServoPos)   
+        else
+            if(dockRelease == 0) then
+                    pwm.setduty(6,96)
+                else
+                    pwm.setduty(6,76)
+                end
+        end
 end
 
 
@@ -70,16 +69,22 @@ function sendData()
     return sendStr
 end
 
-function update_status
-
-
 ------------------------ Initialisation Code goes here
 
-pwm.setup(5, 50, 500)
+pwm.setup(5, 50, 76)
+pwm.setup(6, 50, 76)
 pwm.start(5)
-
+pwm.start(6)
 -- setting up pwm for servos
 --setup function for communicating with atmega
+
+
+function main()
+    setBackupArrest()
+    setDockRelease()
+
+end
+
 
 
 
@@ -99,9 +104,15 @@ sys:alarm(1000, tmr.ALARM_SEMI, function()
         sys:start()
     else
         print("Got IP. "..wifi.sta.getip())
+        --create timer after getting ip address
+        mainTmr = tmr.create()
+        mainTmr:register(1000, tmr.ALARM_AUTO, function() main() end)
+        if not mainTmr:start() then print("uh oh") end
         wifi.sta.sethostname("LANDER-ESP8266")
     end 
 end)
+
+
 
 srv=net.createServer(net.TCP)
 srv:listen(80,function(conn)
@@ -110,11 +121,11 @@ srv:listen(80,function(conn)
     for k, v in string.gmatch( string_payload, "(%w+)=(%w+)" ) do
         status[k] = v
     end
-    --print(payload)
+    print(payload)
     receiveData()
     conn:send("HTTP/1.1 200 OK\n")
     conn:send("\r\n\n\n")
-    conn:send(sendData()) 
+    conn:send(sendData())
   end)
   conn:on("sent",function(conn) conn:close() end)
 end)
