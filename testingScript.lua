@@ -43,6 +43,7 @@ function receiveData()
     -- A secondary loop function, this function is called every time a web request is received
     -- Puts received data into variables and called any functions that will update the lander
     --   based on the new data
+
     dockRelease = tonumber(status.dockRelease)
     backupArrest = tonumber(status.backupArrest)
     abort = tonumber(status.abort)
@@ -55,6 +56,8 @@ function receiveData()
 end
 
 function sendData()
+    -- Sends all the status bits to the website
+
     sendStr = "";
     sendStr = sendStr.. dockRelease..",";
     sendStr = sendStr.. backupArrest.. ",";
@@ -92,7 +95,7 @@ station_cfg.save=false
 wifi.setmode(wifi.STATION, true)
 wifi.sta.config(station_cfg)
 
-
+-- Connect to wifi
 sys = tmr.create()
 sys:alarm(1000, tmr.ALARM_SEMI, function() 
     if wifi.sta.getip()== nil then 
@@ -101,21 +104,42 @@ sys:alarm(1000, tmr.ALARM_SEMI, function()
     else
         print("Got IP. "..wifi.sta.getip())
         wifi.sta.sethostname("LANDER-ESP8266")
+        -- print(status.abort)
+        print("1")
     end 
-end)
+    print("2a")
 
+end)
+print("2b")
+
+-- Start up the remote monitoring server
 srv=net.createServer(net.TCP)
+print("3")
 srv:listen(80,function(conn)
-  conn:on("receive",function(conn,payload)
+    print("4")
+    conn:on("receive",function(conn,payload)
+        print("5")
+
+    print("meme")
+
+    -- Recieve data from the server
     string_payload = tostring(payload)
+    print("meme")
     for k, v in string.gmatch( string_payload, "(%w+)=(%w+)" ) do
         status[k] = v
     end
-    --print(payload)
-    receiveData()
+    -- print(payload) -- Print what the website sent
+    receiveData() -- use the recieved data to repopulate our status variables
+    
+    -- print(status.abort)
+
+    -- Send data to the server
     conn:send("HTTP/1.1 200 OK\n")
     conn:send("\r\n\n\n")
-    conn:send(sendData()) 
+    conn:send(sendData()) -- send our current status variables to the website
+
+    -- print(status.abort)
+
   end)
   conn:on("sent",function(conn) conn:close() end)
 end)

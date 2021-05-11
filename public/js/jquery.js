@@ -1,3 +1,9 @@
+/* -------------------------------------------------------------------------- */
+/*                                  JQUERY.JS                                 */
+/* -------------------------------------------------------------------------- */
+// This file handles the dynamic operation of the website, incuding sending and 
+// recieving daata from the lander ESP
+
 var ip_address = "192.168.137.190";
 
 var dockRelease = 1; // 0 for latched, 1 for unlatched
