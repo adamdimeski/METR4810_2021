@@ -1,4 +1,10 @@
+-- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 
+-- WIFI SETTINGS
+wifiSsid="Alex's iPhone 6" -- Change for your hotspot
+wifiPwd="ayylmao0" -- Change for your hotspot
+
+-- STATUS VARIABLES
 dockRelease = 0 -- 0 for latched, 1 for unlatched
 backupArrest = 0 -- o for running, 1 for stopped
 abort = 0 -- 0 for normal operation ,1 for abort
@@ -10,7 +16,7 @@ restart = 0 -- resets system for another mission, 0 for normal state, 1 for rese
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 status={}
 
------------------------- Functions go below here
+-- -------------------------------- FUNCTIONS ------------------------------- --
 
 function setThrust(thrustPos)
 
@@ -73,7 +79,7 @@ end
 function update_status
 
 
------------------------- Initialisation Code goes here
+-- -------------------------------- MAIN CODE ------------------------------- --
 
 pwm.setup(5, 50, 500)
 pwm.start(5)
@@ -85,8 +91,8 @@ pwm.start(5)
 
 --Setup WiFi and other wifi related stuff below here
 station_cfg={}
-station_cfg.ssid="COVID-5G"
-station_cfg.pwd="1300655506"
+station_cfg.ssid=wifiSsid
+station_cfg.pwd=wifiPwd
 station_cfg.save=false
 wifi.setmode(wifi.STATION, true)
 wifi.sta.config(station_cfg)
