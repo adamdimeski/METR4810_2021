@@ -76,7 +76,7 @@ function sendData()
     return sendStr
 end
 
--- -------------------------------- MAIN CODE ------------------------------- --
+-- -------------------------------- SETUP CODE ------------------------------- --
 
 pwm.setup(5, 50, 76)
 pwm.setup(6, 50, 76)
@@ -85,6 +85,7 @@ pwm.start(6)
 -- setting up pwm for servos
 --setup function for communicating with atmega
 
+-- -------------------------------- MAIN CODE ------------------------------- --
 
 function main()
     setBackupArrest()

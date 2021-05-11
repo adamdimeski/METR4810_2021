@@ -61,13 +61,13 @@ $("#ip_address_button").click(function(){
 		$("#ip_addr").val("");
 });
 
-$("#abortActivateBtn").click(function(){
-		abort = 1;
+$("#dockActivateBtn").click(function(){
+		dockRelease = 1;
 		sendData();
 });
 
-$("#abortDeactivateBtn").click(function(){
-		abort = 0;
+$("#dockDeactivateBtn").click(function(){
+		dockRelease = 0;
 		sendData();
 });
 
