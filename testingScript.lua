@@ -89,8 +89,8 @@ pwm.start(5)
 
 --Setup WiFi and other wifi related stuff below here
 station_cfg={}
-station_cfg.ssid="OPPO Reno 10x Zoom"
-station_cfg.pwd="Martindb9"
+station_cfg.ssid="Alex's iPhone 6"
+station_cfg.pwd="ayylmao0"
 station_cfg.save=false
 wifi.setmode(wifi.STATION, true)
 wifi.sta.config(station_cfg)
