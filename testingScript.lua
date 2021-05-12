@@ -114,7 +114,7 @@ function setupDockRelease()
     -- Sets up the docking release mechanism (starts in closed position)
     print("Setting up DR...")
 
-    dockRelease == 0 -- set status (start with DR closed)
+    dockRelease = 0 -- set status (start with DR closed)
     pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY) -- setup pwm settings (50Hz)
     pwm.start(DR_PIN) -- start sending pwm signal
 end
@@ -138,25 +138,27 @@ function toggleDockRelease()
     end
 end
 
+-- function oneTimeSetup()
+--     -- Setup motor
+--     -- pwm.setup(MOTOR_PIN, 50, ZERO_DEG_DUTY)
+--     -- Setup backup arrestor
+--     -- pwm.setup(BA_PIN, 50, ZERO_DEG_DUTY)
+--     -- -- pwm.start(MOTOR_PIN)
+--     -- setAngle(BA_PIN, 0)
+--     -- -- setting up pwm for servos
+--     -- --...
+-- end
 -- --------------------------- ONE TIME SETUP CODE -------------------------- --
 
-function oneTimeSetup()
-    print("Doing one-time-setup...")
+print("Doing one-time-setup...")
 
-    -- Setup docking release
-    setupDockRelease()
-
-    -- Setup motor
-    -- pwm.setup(MOTOR_PIN, 50, ZERO_DEG_DUTY)
+-- Setup docking release
+-- setupDockRelease()
     
-    -- Setup backup arrestor
-    -- pwm.setup(BA_PIN, 50, ZERO_DEG_DUTY)
-
-    -- -- pwm.start(MOTOR_PIN)
-    -- setAngle(BA_PIN, 0)
-    -- -- setting up pwm for servos
-    -- --...
-end
+pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY)
+pwm.start(DR_PIN)
+-- setting up pwm for servos
+--setup function for communicating with atmega
 
 
 -- -------------------------------- MAIN CODE ------------------------------- --
@@ -167,6 +169,8 @@ function main()
 
     -- Toggle the docking release open/closed
     toggleDockRelease()
+
+    print("dockRelease="..tostring(dockRelease))
 
     -- setBackupArrest()
     -- setDockRelease()
@@ -194,7 +198,7 @@ sys:alarm(1000, tmr.ALARM_SEMI, function()
         print("Got IP. "..wifi.sta.getip())
         
         -- Setup the main loop with witchcraft
-        oneTimeSetup()
+        -- oneTimeSetup()
         mainTmr = tmr.create()
         mainTmr:register(1000, tmr.ALARM_AUTO, function() main() end)
         if not mainTmr:start() then print("uh oh") end
