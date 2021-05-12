@@ -32,8 +32,11 @@ restart = 0 -- resets system for another mission, 0 for normal state, 1 for rese
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 status={}
 
--- -------------------------------- FUNCTIONS ------------------------------- --
+-- -------------------------------------------------------------------------- --
+--                                  FUNCTIONS                                 --
+-- -------------------------------------------------------------------------- --
 
+-- ------------------------------ BACKUP ARREST ----------------------------- --
 function setBackupArrest()
     --pwm duty cycle between 18 and 134
     if( baServoPos > 0) then
@@ -47,22 +50,7 @@ function setBackupArrest()
     end
 end
 
--- function setDockRelease()
---     -- WTF does this function do! no docs
---     --pwm duty cycle between 18 and 134
---     if( drServoPos > 0) then
---         pwm.setduty(BA_PIN,drServoPos)
---     else
---         if(dockRelease == 0) then
---             -- Set the dock release to the closed position
---             pwm.setduty(BA_PIN,DR_CLOSED_DUTY)
---         else
---             -- Set the dock release to the open position
---             pwm.setduty(BA_PIN,DR_OPEN_DUTY)
---         end
---     end
--- end
-
+-- ------------------------------ COMMUNICATION ----------------------------- --
 
 function receiveData()
     -- A secondary loop function, this function is called every time a web request is received
@@ -98,6 +86,8 @@ function sendData()
     return sendStr
 end
 
+-- ---------------------------------- SERVO --------------------------------- --
+
 function setAngle(pin, angle)
     -- Set the angle of a servo (0-180) (1ms-2ms pulse)
     -- Does nothing if given an angle outside 0-180
@@ -109,6 +99,9 @@ function setAngle(pin, angle)
     end
     -- If angle out of range do nothing
 end
+
+
+-- ----------------------------- DOCKING RELEASE ---------------------------- --
 
 function setupDockRelease()
     -- Sets up the docking release mechanism (starts in closed position)
@@ -140,16 +133,26 @@ function toggleDockRelease()
     -- pwm.start(DR_PIN) -- start sending pwm signal
 end
 
--- function oneTimeSetup()
---     -- Setup motor
---     -- pwm.setup(MOTOR_PIN, 50, ZERO_DEG_DUTY)
---     -- Setup backup arrestor
---     -- pwm.setup(BA_PIN, 50, ZERO_DEG_DUTY)
---     -- -- pwm.start(MOTOR_PIN)
---     -- setAngle(BA_PIN, 0)
---     -- -- setting up pwm for servos
---     -- --...
--- end
+function updateDockRelease()
+    -- Updates the dock release mechanism open/closed based on our desired dockRelease status
+
+    print("Updating dock release...")
+    if(dockRelease == 0) then
+        -- If we should be closed
+        -- Set the dock release to the closed position
+        pwm.setduty(DR_PIN,DR_CLOSED_DUTY) --DR_OPEN_DUTY
+    else
+        -- If we should be open
+        -- Set the dock release to the open position
+        pwm.setduty(DR_PIN,DR_OPEN_DUTY)
+    end
+end
+
+-- -------------------------------------------------------------------------- --
+--                                END FUNCTIONS                               --
+-- -------------------------------------------------------------------------- --
+
+
 -- --------------------------- ONE TIME SETUP CODE -------------------------- --
 
 print("Doing one-time-setup...")
@@ -169,9 +172,8 @@ setupDockRelease()
 function main()
     print("Running main loop...")
 
-    -- Toggle the docking release open/closed
-    toggleDockRelease()
-
+    -- Update the docking release open/closed
+    updateDockRelease()
     print("dockRelease="..tostring(dockRelease))
 
     -- setBackupArrest()
