@@ -83,6 +83,21 @@ function toggleBackupArrest()
     end
 end
 
+-- function updateBackupArrest()
+--     -- Updates the backup arrest mechanism open/closed based on our desired backupArrest status
+
+--     print("Updating backup arrest...")
+--     if(backupArrest == 0) then
+--         -- If we should be open
+--         -- Set the dock release to the closed position
+--         pwm.setduty(BA_PIN, BA_CLOSED_DUTY) --DR_OPEN_DUTY
+--     else
+--         -- If we should be open
+--         -- Set the dock release to the open position
+--         pwm.setduty(BA_PIN, BA_OPEN_DUTY)
+--     end
+-- end
+
 -- ------------------------------ COMMUNICATION ----------------------------- --
 
 function receiveData()
@@ -210,12 +225,12 @@ function main()
     print("Running main loop...")
 
     -- Toggle the docking release open/closed
-    toggleDockRelease()
+    updateDockRelease()
     print("dockRelease="..tostring(dockRelease))
 
     -- Toggle the backup arrest open/closed
-    toggleBackupArrest()
-    print("backupArrest="..tostring(backupArrest))
+--    updateBackupArrest()
+--    print("backupArrest="..tostring(backupArrest))
 
     -- setDockRelease()
 end
