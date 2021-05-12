@@ -9,10 +9,12 @@ wifiPwd = "ayylmao0"
 MOTOR_PIN = 5
 
 BA_PIN = 6
+BA_OPEN_DUTY = 76
+BA_CLOSED_DUTY = 90
 
 DR_PIN = 5
-DR_CLOSED_DUTY = 76
 DR_OPEN_DUTY = 96
+DR_CLOSED_DUTY = 76
 
 -- Misc
 ZERO_DEG_DUTY = 52
@@ -47,6 +49,37 @@ function setBackupArrest()
         else
             pwm.setduty(5,90)
         end
+    end
+end
+
+
+function setupBackupArrest()
+    -- Sets up the docking release mechanism (starts in closed position)
+    print("Setting up BA...")
+
+    backupArrest = 0 -- set status (start with DR closed)
+    pwm.setup(BA_PIN, 50, BA_CLOSED_DUTY) -- setup pwm settings (50Hz)
+    pwm.start(BA_PIN) -- start sending pwm signal
+end
+
+function toggleBackupArrest()
+    -- Toggles the backup arrest mechanism open/closed
+    -- Open = free spooling of thread
+    -- Closed = spool braked
+
+    print("Toggling BA...")
+    if(backupArrest == 0) then
+        -- If NOT currently braked
+        -- Set the dock release to the braked position
+        pwm.setduty(BA_PIN,BA_CLOSED_DUTY)
+        -- Record our new status
+        backupArrest = 1
+    else
+        -- If currently braked
+        -- Set the dock release to the open position
+        pwm.setduty(BA_PIN,BA_OPEN_DUTY)
+        -- Record our new status
+        backupArrest = 0
     end
 end
 
@@ -116,7 +149,7 @@ function toggleDockRelease()
     -- Toggles the dock release mechanism open/closed
     -- pwm.stop(DR_PIN) -- start sending pwm signal
 
-    print("Toggling...")
+    print("Toggling DR...")
     if(dockRelease == 0) then
         -- If NOT currently released
         -- Set the dock release to the open position
@@ -159,7 +192,10 @@ print("Doing one-time-setup...")
 
 -- Setup docking release
 setupDockRelease()
-    
+
+-- Setup the backup arrest
+setupBackupArrest()
+
 -- pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY)
 -- pwm.start(DR_PIN)
 -- setting up pwm for servos
@@ -173,11 +209,14 @@ setupDockRelease()
 function main()
     print("Running main loop...")
 
-    -- Update the docking release open/closed
-    updateDockRelease()
+    -- Toggle the docking release open/closed
+    toggleDockRelease()
     print("dockRelease="..tostring(dockRelease))
 
-    -- setBackupArrest()
+    -- Toggle the backup arrest open/closed
+    toggleBackupArrest()
+    print("backupArrest="..tostring(backupArrest))
+
     -- setDockRelease()
 end
 
