@@ -114,28 +114,30 @@ function setupDockRelease()
     -- Sets up the docking release mechanism (starts in closed position)
     print("Setting up DR...")
 
-    dockRelease = 0 -- set status (start with DR closed)
+    dockRelease = 12 -- set status (start with DR closed)
     pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY) -- setup pwm settings (50Hz)
     pwm.start(DR_PIN) -- start sending pwm signal
 end
 
 function toggleDockRelease()
     -- Toggles the dock release mechanism open/closed
+    -- pwm.stop(DR_PIN) -- start sending pwm signal
 
     print("Toggling...")
     if(dockRelease == 0) then
         -- If NOT currently released
         -- Set the dock release to the open position
-        pwm.setduty(BA_PIN,DR_OPEN_DUTY)
+        pwm.setduty(DR_PIN,DR_OPEN_DUTY) --DR_OPEN_DUTY
         -- Record our new status
         dockRelease = 1
     else
         -- If currently released
         -- Set the dock release to the closed position
-        pwm.setduty(BA_PIN,DR_CLOSED_DUTY)
+        pwm.setduty(DR_PIN,DR_CLOSED_DUTY)
         -- Record our new status
         dockRelease = 0
     end
+    -- pwm.start(DR_PIN) -- start sending pwm signal
 end
 
 -- function oneTimeSetup()
