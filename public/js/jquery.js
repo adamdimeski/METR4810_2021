@@ -40,18 +40,24 @@ async function sendData()
 
 	//add more variables to the string above to send to the microcontroller
 
-	fetch(("http://" + ip_address + ":80"), {
-												method: 'POST',
-												body: (data),
-												credentials: 'same-origin'
-								}).then(response => response.text())
-        				.then((response) => {
-									csv = $.csv.toArray(response);
-									receiveData(csv)
-            			console.log(data)
-								}).catch(function(err) {
-												alert(err);
-								});
+	try {
+		fetch(("http://" + ip_address + ":80"), {
+													method: 'POST',
+													body: (data),
+													credentials: 'same-origin'
+									}).then(response => response.text())
+	        				.then((response) => {
+										csv = $.csv.toArray(response);
+										receiveData(csv)
+	            			console.log(data)
+									}).catch(function(err) {
+													alert(err);
+									});
+			}
+			catch(err) {
+  		console.log(err.message);
+			}
+
 }
 
 (async() => {
