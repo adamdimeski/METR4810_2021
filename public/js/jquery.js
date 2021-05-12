@@ -16,6 +16,11 @@ var start = 0; // start of mission, activates release from dock and activation o
 var restart = 0; // resets system for another mission, 0 for normal state, 1 for reset.
 var powerCycle = 0; // 0 for normal state, 1 for restarting the circuits
 
+
+//Do not add these variables to the FETCH request
+var autoupdate = 0;
+var autoRefreshInterval = 1000; //milliseconds
+
 //add more variables here
 // no negative numbers
 
@@ -60,36 +65,96 @@ async function sendData()
 })();
 
 $(document).ready(function(){
+	$("#ipAdresstxt").text(ip_address);
+
+
+	function refresh()
+	{
+		if(autoupdate != 0)
+		{
+			thrustPos = $("#thrustAdjust").val();
+			$("#thrusttxt").text(thrustPos);
+
+			sendData();
+
+			if(dockRelease != 0)
+			{
+				$("#dockingtxt").text("ENABLED");
+			}
+			else
+			{
+				$("#dockingtxt").text("DISABLED");
+			}
+
+			if(dockRelease != 0)
+			{
+				$("#backuptxt").text("ENABLED");
+			}
+			else
+			{
+				$("#backuptxt").text("DISABLED");
+			}
+
+			if(dockRelease != 0)
+			{
+				$("#backuptxt").text("ENABLED");
+			}
+			else
+			{
+				$("#backuptxt").text("DISABLED");
+			}
+
+
+
+
+		}
+	}
+
+	setInterval(function(){refresh();},1000);
 
 
 $("#ip_address_button").click(function(){
 		ip_address = $("#ip_addr").val();
+		$("#ipAdresstxt").text(ip_address);
 		$("#ip_addr").val("");
 });
 
-$("#abortActivateBtn").click(function(){
-		abort = 1;
+$("#dockActivateBtn").click(function(){
+		dockRelease = 1;
+		$("#dockingtxt").text("ENABLED");
+		dockingtxt
 		sendData();
 });
 
-$("#abortDeactivateBtn").click(function(){
-		abort = 0;
+$("#dockDeactivateBtn").click(function(){
+		dockRelease = 0;
+		$("#dockingtxt").text("DISABLED");
 		sendData();
 });
 
 $("#arrestActivateBtn").click(function(){
 		backupArrest = 1;
+		$("#backuptxt").text("ENABLED");
 		sendData();
 });
 
 $("#arrestDeactivateBtn").click(function(){
 		backupArrest = 0;
+		$("#backuptxt").text("DISABLED");
 		sendData();
 });
 
-$("#send").click(function(){
-		sendData();
+$("#autoRefreshbtn").click(function(){
+		if (autoupdate != 0)
+		{
+			autoupdate = 0
+			$("#autoRefreshtxt").text("OFF");
+		}
+		else
+		{
+			autoupdate = 1
+			$("#autoRefreshtxt").text("ON");
+		}
 });
-
 
 });

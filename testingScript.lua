@@ -165,6 +165,7 @@ setupDockRelease()
 -- setting up pwm for servos
 --setup function for communicating with atmega
 
+-- -------------------------------- MAIN CODE ------------------------------- --
 
 -- -------------------------------- MAIN CODE ------------------------------- --
 
