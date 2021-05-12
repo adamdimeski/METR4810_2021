@@ -153,10 +153,10 @@ end
 print("Doing one-time-setup...")
 
 -- Setup docking release
--- setupDockRelease()
+setupDockRelease()
     
-pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY)
-pwm.start(DR_PIN)
+-- pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY)
+-- pwm.start(DR_PIN)
 -- setting up pwm for servos
 --setup function for communicating with atmega
 
