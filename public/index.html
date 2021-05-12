@@ -1,32 +1,30 @@
 <!doctype html>
 <html lang="en">
-<script src="js/jquery-3.2.1.min.js"></script>
+  <script src="js/jquery-3.2.1.min.js"></script>
 
-<script src="js/jquery.js"></script>
-<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.js"></script>
-<script src="js/jcanvas.min.js"></script>
-<link rel="stylesheet" type="text/css" href="css/style.css">
+  <script src="js/jquery.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.js"></script>
+  <script src="js/jcanvas.min.js"></script>
+  <link rel="stylesheet" type="text/css" href="css/style.css">
+  <head>
+    <meta charset="utf-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
+    <link rel="stylesheet" href = "css/bootstrap.min.css" rel="stylesheet" type="text/css" >
+    <script src="js/bootstrap.min.js"></script>
 
-<head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
-  <link rel="stylesheet" href="css/bootstrap.min.css" rel="stylesheet" type="text/css">
-  <script src="js/bootstrap.min.js"></script>
 
+    <title>METR4810</title>
+  </head>
+  <body style = "background-color: rgb(40,40,40); color: white;">
 
-  <title>METR4810</title>
-</head>
+		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
+		  <a class="navbar-brand" href="#">METR4810 Lander Control</a>
+		  </button>
+		</nav>
 
-<body style="background-color: rgb(40,40,40); color: white;">
+	<div style="margin-top:30px; margin-left: 20px;">
 
-  <nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-    <a class="navbar-brand" href="#">METR4810 Lander Control</a>
-    </button>
-  </nav>
-
-  <div style="margin-top:30px; margin-left: 20px;">
     <div>
-      <!-- Page Title -->
       <h2>Overview</h2>
 
   <h2 style = "text-align: center;">Control Panel</h2>
@@ -75,7 +73,6 @@
             <label id = "backuptxt"class = "col-6" style = "text-align: left;">DISABLED</label>
           </div>
           <br>
-        </div>
       </div>
       </div>
       <div id = "controlpanel_3" class = "col-4">
@@ -86,8 +83,11 @@
             <button id = "dockActivateBtn" class = "col-2 control_button">Activate</button>
             <button id = "dockDeactivateBtn"class = "col-2 control_button">Deactivate</button>
           </div>
-          <div class="row">
-            <button class="col-2 control_button" id="send">Send Data </button>
+          <br>
+          <div class = "row">
+            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Backup Arrestor</label>
+            <button id = "arrestActivateBtn" class = "col-2 control_button">Activate</button>
+            <button id = "arrestDeactivateBtn"class = "col-2 control_button">Deactivate</button>
           </div>
           <br>
           <div class = "row">
@@ -97,6 +97,8 @@
           <br>
         </div>
       </div>
+    </div>
+
 
     </div>
 
@@ -108,14 +110,15 @@
   <div class="footer-copyright text-center py-3">
     <p>METR4810 TEAM 9 2021<p>
   </div>
+  <!-- Copyright -->
 
-  <footer class="page-footer font-small blue">
-    <!-- Copyright -->
-    <div class="footer-copyright text-center py-3">
-      <p>METR4810 TEAM 9 2020
-      <p>
-    </div>
-    <!-- Copyright -->
-  </footer>
-</body>
+</footer>
+
+
+
+  	</body>
+
+
+
+
 </html>
