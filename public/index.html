@@ -31,13 +31,17 @@
   <div id = "controlpanel" class = "row">
       <div id = "controlpanel_1" class = "col-4">
         <h2> Settings</h2>
+        <br>
         <div class = "row">
           <label class = "col" style = "text-align: left;">IP Address: </label>
           <input class = "col control_button" type="text" id="ip_addr" style = "background-color: white; color: black"><br>
-          <button class = "col-2 control_button" id = "ip_address_button">Set </button>
+          <button class = "col-2 control_button" id = "ip_address_button">Set</button>
         </div>
+        <br>
         <div class = "row">
-          <button class = "col-2 control_button" id = "send">Send Data </button>
+          <label class = "col" style = "text-align: left;">Auto-Refresh</label>
+          <label id = "autoRefreshtxt"class = "col-2" style = "text-align: left;">OFF</label>
+          <button id = "autoRefreshbtn" class = "col-2 control_button" id = "ip_address_button">Set/Reset</button>
         </div>
         <br>
       </div>
@@ -45,11 +49,28 @@
         <div style = "text-align: center; margin-top: 0px; margin: 10px; font-size: 14px;">
           <h2> Status</h2>
           <div class = "row" style = "">
-            <label class = "col-5" style = "text-align: left;">Start</label>
+            <label class = "col-6" style = "text-align: left;">IP Address</label>
+            <label id = "ipAdresstxt"class = "col-6" style = "text-align: left;">IP Address</label>
+          </div>
+          <br>
+          <div class = "row" style = "">
+            <label class = "col-6" style = "text-align: left;">Start</label>
+            <label id = "starttxt"class = "col-6" style = "text-align: left;">NO</label>
           </div>
           <br>
           <div class = "row">
-            <label class = "col-6" style = "text-align: left;" >thrust %</label>
+            <label class = "col-6" style = "text-align: left;"> Thrust %</label>
+            <label id = "thrusttxt"class = "col-6" style = "text-align: left;">0</label>
+          </div>
+          <br>
+          <div class = "row">
+            <label class = "col-6" style = "text-align: left;" >Docking Adaptor</label>
+            <label id = "dockingtxt"class = "col-6" style = "text-align: left;">DISABLED</label>
+          </div>
+          <br>
+          <div class = "row">
+            <label class = "col-6" style = "text-align: left;" >Backup Arrestor</label>
+            <label id = "backuptxt"class = "col-6" style = "text-align: left;">DISABLED</label>
           </div>
           <br>
       </div>
@@ -58,9 +79,9 @@
         <div style = "text-align: center; margin-top: 0px; margin: 10px; font-size: 14px;">
           <h2> Control</h2>
           <div class = "row" style = "text-align: left;">
-            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Abort</label>
-            <button id = "abortActivateBtn" class = "col-2 control_button">Activate</button>
-            <button id = "abortDeactivateBtn"class = "col-2 control_button">Deactivate</button>
+            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
+            <button id = "dockActivateBtn" class = "col-2 control_button">Activate</button>
+            <button id = "dockDeactivateBtn"class = "col-2 control_button">Deactivate</button>
           </div>
           <br>
           <div class = "row">
@@ -68,15 +89,7 @@
             <button id = "arrestActivateBtn" class = "col-2 control_button">Activate</button>
             <button id = "arrestDeactivateBtn"class = "col-2 control_button">Deactivate</button>
           </div>
-
           <br>
-          <div class = "row">
-            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Track Changer (T) Vol 36 min</label>
-            <button class = "col control_button" id = "tc">⬅➡</button>
-          </div>
-          <br>
-          <audio controls id = "pos_1"> <source src="pos_1.wav" type="audio/wav"></audio>
-          <audio controls id = "pos_2"> <source src="pos_2.wav" type="audio/wav"></audio>
         </div>
       </div>
     </div>
@@ -90,7 +103,7 @@
 
   <!-- Copyright -->
   <div class="footer-copyright text-center py-3">
-    <p>METR4810 TEAM 7 2020 <p>
+    <p>METR4810 TEAM 9 2021<p>
   </div>
   <!-- Copyright -->
 
