@@ -66,6 +66,9 @@ $(document).ready(function(){
 	{
 		if(autoupdate != 0)
 		{
+			thrustPos = $("#thrustAdjust").val();
+			$("#thrusttxt").text(thrustPos);
+
 			sendData();
 
 			if(dockRelease != 0)
@@ -75,6 +78,15 @@ $(document).ready(function(){
 			else
 			{
 				$("#dockingtxt").text("DISABLED");
+			}
+
+			if(dockRelease != 0)
+			{
+				$("#backuptxt").text("ENABLED");
+			}
+			else
+			{
+				$("#backuptxt").text("DISABLED");
 			}
 
 			if(dockRelease != 0)
