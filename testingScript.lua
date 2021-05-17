@@ -5,16 +5,16 @@
 wifiSsid = "Alex's iPhone 6"
 wifiPwd = "ayylmao0"
 
--- Pin mappings
-MOTOR_PIN = 5
-
+-- Backup arrest
 BA_PIN = 6
 BA_OPEN_DUTY = 90
 BA_CLOSED_DUTY = 76
-
+-- Docking release
 DR_PIN = 5
 DR_OPEN_DUTY = 96
 DR_CLOSED_DUTY = 76
+-- Thruster
+TH_PIN = BA_PIN
 
 -- Misc
 ZERO_DEG_DUTY = 52
@@ -88,6 +88,18 @@ function setAngle(pin, angle)
     -- If angle out of range do nothing
 end
 
+function angle2duty(angle)
+    -- Returns the duty cycle for a given angle
+    -- Does nothing if given an angle outside 0-180
+
+    if angle>=0 and angle<=180 then
+        dutyTime = 1 + 1*(angle/180) -- time of pulse in ms
+        dutyCycle = (dutyTime/20) * 1023 -- the duty cucle out of 1023
+        return dutyCycle
+    end
+    -- If angle out of range do nothing
+end
+
 -- ------------------------------ BACKUP ARREST ----------------------------- --
 function setBackupArrest()
     --pwm duty cycle between 18 and 134
@@ -144,7 +156,8 @@ function updateBackupArrest()
     else
         -- If we should be closed
         -- Set the dock release to the closed position
-        pwm.setduty(BA_PIN, BA_CLOSED_DUTY)
+        pwm.setduty
+(BA_PIN, BA_CLOSED_DUTY)
     end
 end
 
@@ -195,6 +208,31 @@ function updateDockRelease()
     end
 end
 
+-- -------------------------------- THRUSTER -------------------------------- --
+
+function setupThruster()
+    -- Sets up the thruster
+    print("Setting up the thruster...")
+
+    -- thrustPos = 0 -- set status (start with DR closed)
+    pwm.setup(TH_PIN, 50, angle2duty(0)) -- setup pwm settings (50Hz) 
+    -- (Note: duty cycle from 0-1023)
+    pwm.start(TH_PIN) -- start sending pwm signal
+end
+
+function updateThruster()
+    -- Turns on the thruster to the given % power level
+
+    print("Turning on the thruster...")
+
+    -- Get the duty cycle for the thruster from the thrustPos % power
+    angle = (thrustPos/100) * 180
+    duty = math.floor(angle2duty(angle)) -- the duty cycle to set the EDF to
+
+    -- Set the thruster to the new power level
+    pwm.setduty(TH_PIN,duty)
+end
+
 -- -------------------------------------------------------------------------- --
 --                                END FUNCTIONS                               --
 -- -------------------------------------------------------------------------- --
@@ -210,6 +248,9 @@ setupDockRelease()
 -- Setup the backup arrest
 setupBackupArrest()
 
+-- Setup the backup arrest
+setupThruster()
+
 -- pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY)
 -- pwm.start(DR_PIN)
 -- setting up pwm for servos
@@ -224,12 +265,21 @@ function main()
     print("Running main loop...")
 
     -- Toggle the docking release open/closed
-    updateDockRelease()
+    toggleDockRelease()
     print("dockRelease="..tostring(dockRelease))
 
     -- Toggle the backup arrest open/closed
-   updateBackupArrest()
-   print("backupArrest="..tostring(backupArrest))
+    toggleBackupArrest()
+    print("backupArrest="..tostring(backupArrest))
+
+    -- Turn on the thruster
+    updateThruster()
+    print("thrustPos="..tostring(thrustPos))
+    -- Step up the thruster power up to 20% and then tare
+    thrustPos = thrustPos+1
+    if thrustPos > 20 then
+        thrustPos = 0
+    end
 
    print("")
 end
@@ -258,7 +308,7 @@ sys:alarm(1000, tmr.ALARM_SEMI, function()
         -- Setup the main loop with witchcraft
         -- oneTimeSetup()
         mainTmr = tmr.create()
-        mainTmr:register(1000, tmr.ALARM_AUTO, function() main() end)
+        mainTmr:register(2000, tmr.ALARM_AUTO, function() main() end)
         if not mainTmr:start() then print("uh oh") end
         wifi.sta.sethostname("LANDER-ESP8266")
     end
