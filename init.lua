@@ -179,7 +179,6 @@ end
 
 
 -- Setup docking release
-tmr.delay(2000000)
 setupDockRelease()
 
 -- Setup the backup arrest
@@ -223,24 +222,33 @@ wifi.setmode(wifi.STATION, true)
 wifi.sta.config(station_cfg)
 
 -- Connect to wifi and setup the main loop
-sys = tmr.create()
-sys:alarm(1000, tmr.ALARM_SEMI, function()
-    if wifi.sta.getip()== nil then
-        -- If not connected to wifi yet
-        print("Looking for IP")
-        sys:start()
-    else
-        -- If connected to wifi
-        print("Got IP. "..wifi.sta.getip())
-        
-        -- Setup the main loop with witchcraft
-        -- oneTimeSetup()
-        mainTmr = tmr.create()
-        mainTmr:register(1000, tmr.ALARM_AUTO, function() main() end)
-        if not mainTmr:start() then print("uh oh") end
-        wifi.sta.sethostname("LANDER-ESP8266")
-    end
+
+sys1 = tmr.create()
+sys1:alarm(5000, tmr.ALARM_SINGLE, function()
+    sys = tmr.create()
+    sys:alarm(1000, tmr.ALARM_SEMI, function()
+        if wifi.sta.getip()== nil then
+            -- If not connected to wifi yet
+            print("Looking for IP")
+            sys:start()
+        else
+            -- If connected to wifi
+            print("Got IP. "..wifi.sta.getip())
+            
+            -- Setup the main loop with witchcraft
+            -- oneTimeSetup()
+            mainTmr = tmr.create()
+            mainTmr:register(100, tmr.ALARM_AUTO, function() main() end)
+            if not mainTmr:start() then print("uh oh") end
+            wifi.sta.sethostname("LANDER-ESP8266")
+        end
+    end)
 end)
+
+
+
+
+
 
 -- Start up the remote monitoring server
 srv=net.createServer(net.TCP)
