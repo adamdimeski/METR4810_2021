@@ -24,7 +24,7 @@ void main()
 	{
 		if ( (PIND & (1 << PIND2)) == (1 << PIND2) ) 
 		{
-			OCR1A = 20;
+			OCR1A = 18;
 		} 
 		else 
 		{

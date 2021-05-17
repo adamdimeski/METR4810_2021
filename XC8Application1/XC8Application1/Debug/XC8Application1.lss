@@ -90,7 +90,7 @@ Disassembly of section .text:
 Disassembly of section .text:
 
 0000013a <__bad_interrupt>:
- 13a:	0c 94 00 00 	jmp	0	; 0x0 <__vectors>
+ 13a:	0c 94 00 00 	jmp	0	; 0x0 <__TEXT_REGION_ORIGIN__>
 
 Disassembly of section .text.main:
 
@@ -168,8 +168,8 @@ void main()
   fc:	82 9b       	sbis	0x10, 2	; 16
   fe:	05 c0       	rjmp	.+10     	; 0x10a <main+0x66>
 		{
-			OCR1A = 26;
- 100:	8a e1       	ldi	r24, 0x1A	; 26
+			OCR1A = 18;
+ 100:	82 e1       	ldi	r24, 0x12	; 18
  102:	90 e0       	ldi	r25, 0x00	; 0
  104:	9b bd       	out	0x2b, r25	; 43
  106:	8a bd       	out	0x2a, r24	; 42

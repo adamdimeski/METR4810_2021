@@ -18,8 +18,7 @@ DR_CLOSED_DUTY = 76
 -- Misc
 ZERO_DEG_DUTY = 52
 -- Thruster
-TH_PIN = BA_PIN
-TH_PIN = 9
+TH_PIN = 8
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -180,10 +179,14 @@ end
 
 
 -- Setup docking release
+tmr.delay(2000000)
 setupDockRelease()
 
 -- Setup the backup arrest
 setupBackupArrest()
+
+gpio.mode(TH_PIN, gpio.OUTPUT);
+gpio.write(TH_PIN, gpio.LOW);
 
 --setup function for communicating with atmega
 
@@ -195,11 +198,11 @@ setupBackupArrest()
 function main()
 
     -- setup thruster
-    gpio.mode(TH_PIN, gpio.OUTPUT);
-    gpio.write(TH_PIN, gpio.LOW);
+   
     
     updateDockRelease()
     setBackupArrest()
+    
     setThrust()
 
     -- Toggle the backup arrest open/closed
