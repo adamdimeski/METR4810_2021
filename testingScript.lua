@@ -17,6 +17,9 @@ DR_CLOSED_DUTY = 76
 
 -- Misc
 ZERO_DEG_DUTY = 52
+-- Thruster
+TH_PIN = BA_PIN
+TH_PIN = 9
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -156,6 +159,17 @@ function updateDockRelease()
     end
 end
 
+function setThrust()
+
+    if (thrustPos > 0) then
+        gpio.write(TH_PIN, gpio.HIGH)
+    else
+        gpio.write(TH_PIN, gpio.LOW)
+    end
+
+end
+
+
 -- -------------------------------------------------------------------------- --
 --                                END FUNCTIONS                               --
 -- -------------------------------------------------------------------------- --
@@ -180,9 +194,13 @@ setupBackupArrest()
 
 function main()
 
-    -- Toggle the docking release open/closed
+    -- setup thruster
+    gpio.mode(TH_PIN, gpio.OUTPUT);
+    gpio.write(TH_PIN, gpio.LOW);
+    
     updateDockRelease()
     setBackupArrest()
+    setThrust()
 
     -- Toggle the backup arrest open/closed
 --    updateBackupArrest()
