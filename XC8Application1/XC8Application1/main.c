@@ -24,3 +24,17 @@ void main()
 		
 	}
 }
+
+int angle2duty(int angle)
+{
+	if (angle >= 0 && angle <= 180)
+	{
+		int dutyTime = 1 + 1*(angle/180) //time of pulse in ms
+		int dutyCycle = (dutyTime/20) * 1023 //the duty cycle out of 1023
+		return dutyCycle
+	}
+	else
+	{
+		return 0;
+	}
+}
