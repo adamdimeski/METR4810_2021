@@ -2,17 +2,16 @@
 -- Constants is for things that will stay "constant" throughout execution
 
 -- Wifi settings
-wifiSsid = "Alex's iPhone 6"
-wifiPwd = "ayylmao0"
+wifiSsid = "COVID-5G"
+wifiPwd = "1300655506"
 
 -- Pin mappings
-MOTOR_PIN = 5
 
-BA_PIN = 6
+BA_PIN = 5
 BA_OPEN_DUTY = 76
 BA_CLOSED_DUTY = 90
 
-DR_PIN = 5
+DR_PIN = 6
 DR_OPEN_DUTY = 96
 DR_CLOSED_DUTY = 76
 
@@ -45,9 +44,9 @@ function setBackupArrest()
         pwm.setduty(BA_PIN,baServoPos)
     else
         if(backupArrest == 0) then
-            pwm.setduty(5,76)
+            pwm.setduty(BA_PIN,76)
         else
-            pwm.setduty(5,90)
+            pwm.setduty(BA_PIN,90)
         end
     end
 end
@@ -57,44 +56,10 @@ function setupBackupArrest()
     -- Sets up the docking release mechanism (starts in closed position)
 
     backupArrest = 0 -- set status (start with DR closed)
-    pwm.setup(BA_PIN, 50, BA_CLOSED_DUTY) -- setup pwm settings (50Hz)
+    pwm.setup(BA_PIN, 50, BA_OPEN_DUTY) -- setup pwm settings (50Hz)
     pwm.start(BA_PIN) -- start sending pwm signal
 end
 
-function toggleBackupArrest()
-    -- Toggles the backup arrest mechanism open/closed
-    -- Open = free spooling of thread
-    -- Closed = spool braked
-
-    if(backupArrest == 0) then
-        -- If NOT currently braked
-        -- Set the dock release to the braked position
-        pwm.setduty(BA_PIN,BA_CLOSED_DUTY)
-        -- Record our new status
-        backupArrest = 1
-    else
-        -- If currently braked
-        -- Set the dock release to the open position
-        pwm.setduty(BA_PIN,BA_OPEN_DUTY)
-        -- Record our new status
-        backupArrest = 0
-    end
-end
-
--- function updateBackupArrest()
---     -- Updates the backup arrest mechanism open/closed based on our desired backupArrest status
-
---     print("Updating backup arrest...")
---     if(backupArrest == 0) then
---         -- If we should be open
---         -- Set the dock release to the closed position
---         pwm.setduty(BA_PIN, BA_CLOSED_DUTY) --DR_OPEN_DUTY
---     else
---         -- If we should be open
---         -- Set the dock release to the open position
---         pwm.setduty(BA_PIN, BA_OPEN_DUTY)
---     end
--- end
 
 -- ------------------------------ COMMUNICATION ----------------------------- --
 
@@ -206,9 +171,6 @@ setupDockRelease()
 -- Setup the backup arrest
 setupBackupArrest()
 
--- pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY)
--- pwm.start(DR_PIN)
--- setting up pwm for servos
 --setup function for communicating with atmega
 
 -- -------------------------------- MAIN CODE ------------------------------- --
