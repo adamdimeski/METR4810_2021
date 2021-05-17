@@ -14,7 +14,7 @@ DR_PIN = 5
 DR_OPEN_DUTY = 96
 DR_CLOSED_DUTY = 76
 -- Thruster
-TH_PIN = BA_PIN
+TH_PIN = 9
 
 -- Misc
 ZERO_DEG_DUTY = 52
@@ -214,23 +214,48 @@ function setupThruster()
     -- Sets up the thruster
     print("Setting up the thruster...")
 
-    -- thrustPos = 0 -- set status (start with DR closed)
-    pwm.setup(TH_PIN, 50, angle2duty(0)) -- setup pwm settings (50Hz) 
-    -- (Note: duty cycle from 0-1023)
-    pwm.start(TH_PIN) -- start sending pwm signal
+    thrustPos = 1 -- set status (start with DR closed)
+
+    -- Setup GPIO ( gpio.mode(pin, mode) )
+    gpio.mode(TH_PIN, gpio.OUTPUT)
+    -- Set the pin to LOW (can be gpio.LOW or gpio.HIGH)
+    gpio.write(TH_PIN, gpio.LOW)
 end
 
 function updateThruster()
-    -- Turns on the thruster to the given % power level
+    -- Turn the thruster on/off based on the current value of the thrustPos 
+    -- variable (1=on, 0=off)
 
-    print("Turning on the thruster...")
+    print("Updating thruster...")
 
-    -- Get the duty cycle for the thruster from the thrustPos % power
-    angle = (thrustPos/100) * 180
-    duty = math.floor(angle2duty(angle)) -- the duty cycle to set the EDF to
+    if thrustPos==0 then
+        -- Send message to turn edf off
+        turnOffThruster()
+    else if thrustPos==1 then
+        -- Send message to turn edf on
+        turnOnThruster()
+    end
 
-    -- Set the thruster to the new power level
-    pwm.setduty(TH_PIN,duty)
+end
+
+function turnOnThruster()
+    -- Turns on the thruster by pulling pin 9 HIGH. The code on the ATMega will 
+    -- turn on the EDF when this pin its HIGH
+
+    print("Turning thruster on...")
+    
+    -- Pull pin 9 HIGH
+    gpio.write(TH_PIN, gpio.HIGH)
+end
+
+function turnOffThruster()
+    -- Turns on the thruster by pulling pin 9 LOW. The code on the ATMega will 
+    -- turn off the EDF when this pin its LOW
+
+    print("Turning thruster off...")
+
+    -- Pull pin 9 LOW
+    gpio.write(TH_PIN, gpio.LOW)
 end
 
 -- -------------------------------------------------------------------------- --
@@ -275,11 +300,6 @@ function main()
     -- Turn on the thruster
     updateThruster()
     print("thrustPos="..tostring(thrustPos))
-    -- Step up the thruster power up to 20% and then tare
-    thrustPos = thrustPos+1
-    if thrustPos > 20 then
-        thrustPos = 0
-    end
 
    print("")
 end
