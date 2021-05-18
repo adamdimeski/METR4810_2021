@@ -17,6 +17,8 @@ DR_CLOSED_DUTY = 76
 
 -- Misc
 ZERO_DEG_DUTY = 52
+-- Thruster
+TH_PIN = 8
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -156,6 +158,17 @@ function updateDockRelease()
     end
 end
 
+function setThrust()
+
+    if (thrustPos > 0) then
+        gpio.write(TH_PIN, gpio.HIGH)
+    else
+        gpio.write(TH_PIN, gpio.LOW)
+    end
+
+end
+
+
 -- -------------------------------------------------------------------------- --
 --                                END FUNCTIONS                               --
 -- -------------------------------------------------------------------------- --
@@ -171,6 +184,9 @@ setupDockRelease()
 -- Setup the backup arrest
 setupBackupArrest()
 
+gpio.mode(TH_PIN, gpio.OUTPUT);
+gpio.write(TH_PIN, gpio.LOW);
+
 --setup function for communicating with atmega
 
 -- -------------------------------- MAIN CODE ------------------------------- --
@@ -180,9 +196,13 @@ setupBackupArrest()
 
 function main()
 
-    -- Toggle the docking release open/closed
+    -- setup thruster
+   
+    
     updateDockRelease()
     setBackupArrest()
+    
+    setThrust()
 
     -- Toggle the backup arrest open/closed
 --    updateBackupArrest()
@@ -202,24 +222,33 @@ wifi.setmode(wifi.STATION, true)
 wifi.sta.config(station_cfg)
 
 -- Connect to wifi and setup the main loop
-sys = tmr.create()
-sys:alarm(1000, tmr.ALARM_SEMI, function()
-    if wifi.sta.getip()== nil then
-        -- If not connected to wifi yet
-        print("Looking for IP")
-        sys:start()
-    else
-        -- If connected to wifi
-        print("Got IP. "..wifi.sta.getip())
-        
-        -- Setup the main loop with witchcraft
-        -- oneTimeSetup()
-        mainTmr = tmr.create()
-        mainTmr:register(1000, tmr.ALARM_AUTO, function() main() end)
-        if not mainTmr:start() then print("uh oh") end
-        wifi.sta.sethostname("LANDER-ESP8266")
-    end
+
+sys1 = tmr.create()
+sys1:alarm(5000, tmr.ALARM_SINGLE, function()
+    sys = tmr.create()
+    sys:alarm(1000, tmr.ALARM_SEMI, function()
+        if wifi.sta.getip()== nil then
+            -- If not connected to wifi yet
+            print("Looking for IP")
+            sys:start()
+        else
+            -- If connected to wifi
+            print("Got IP. "..wifi.sta.getip())
+            
+            -- Setup the main loop with witchcraft
+            -- oneTimeSetup()
+            mainTmr = tmr.create()
+            mainTmr:register(100, tmr.ALARM_AUTO, function() main() end)
+            if not mainTmr:start() then print("uh oh") end
+            wifi.sta.sethostname("LANDER-ESP8266")
+        end
+    end)
 end)
+
+
+
+
+
 
 -- Start up the remote monitoring server
 srv=net.createServer(net.TCP)
