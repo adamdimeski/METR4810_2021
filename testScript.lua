@@ -1,9 +1,9 @@
 -- -------------------------- CONSTANTS / SETTINGS -------------------------- --
 -- Constants is for things that will stay "constant" throughout execution
-
+reqiure(i2c)
 -- Wifi settings
-wifiSsid = "Alex's iPhone 6"
-wifiPwd = "ayylmao0"
+wifiSsid = "OPPO Reno 10x Zoom"
+wifiPwd = "Martindb9"
 
 -- Pin mappings
 MOTOR_PIN = 5
@@ -64,10 +64,15 @@ end
 
 
 function setupThottleControl()
-    uart.setup(0, 9600, 8, uart.PARITY_NONE, uart.STOPBITS_1, 1)
-    uart.write(0, "0")
+    uart.setup(1, 9600, 8, uart.PARITY_NONE, uart.STOPBITS_1, 1)
+    uart.write(1, "0")
 end
-
+function initAccelerometer()
+   sda = 4 -- GPIO2
+   scl = 3 -- GPIO0
+   sla = 0x3c
+   i2c.setup(0, sda, scl, i2c.SLOW)
+end
 
 
 function setThrottle()
@@ -219,6 +224,7 @@ setupDockRelease()
 
 -- Setup the backup arrest
 setupBackupArrest()
+
 --setupThottleControl()
 -- pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY)
 -- pwm.start(DR_PIN)
@@ -233,9 +239,11 @@ setupBackupArrest()
 function main()
 
     -- Toggle the docking release open/closed
+    initAccelerometer()
     updateDockRelease()
     setBackupArrest()
     setThrottle()
+    i2c.read(0, 2)
 
     -- Toggle the backup arrest open/closed
 --    updateBackupArrest()
