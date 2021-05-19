@@ -1,6 +1,6 @@
 -- -------------------------- CONSTANTS / SETTINGS -------------------------- --
 -- Constants is for things that will stay "constant" throughout execution
-reqiure(i2c)
+require("i2c")
 -- Wifi settings
 wifiSsid = "OPPO Reno 10x Zoom"
 wifiPwd = "Martindb9"
