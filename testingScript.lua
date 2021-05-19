@@ -7,10 +7,6 @@ wifiPwd = "1300655506"
 
 -- Pin mappings
 
-BA_PIN = 5
-BA_OPEN_DUTY = 76
-BA_CLOSED_DUTY = 90
-
 DR_PIN = 6
 DR_OPEN_DUTY = 96
 DR_CLOSED_DUTY = 76
@@ -18,7 +14,8 @@ DR_CLOSED_DUTY = 76
 -- Misc
 ZERO_DEG_DUTY = 52
 -- Thruster
-TH_PIN = 8
+TH_PIN = 5
+TH_START_DUTY = 50;
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -40,28 +37,6 @@ status={}
 -- -------------------------------------------------------------------------- --
 
 -- ------------------------------ BACKUP ARREST ----------------------------- --
-function setBackupArrest()
-    --pwm duty cycle between 18 and 134
-    if( baServoPos > 0) then
-        pwm.setduty(BA_PIN,baServoPos)
-    else
-        if(backupArrest == 0) then
-            pwm.setduty(BA_PIN,76)
-        else
-            pwm.setduty(BA_PIN,90)
-        end
-    end
-end
-
-
-function setupBackupArrest()
-    -- Sets up the docking release mechanism (starts in closed position)
-
-    backupArrest = 0 -- set status (start with DR closed)
-    pwm.setup(BA_PIN, 50, BA_OPEN_DUTY) -- setup pwm settings (50Hz)
-    pwm.start(BA_PIN) -- start sending pwm signal
-end
-
 
 -- ------------------------------ COMMUNICATION ----------------------------- --
 
@@ -158,16 +133,18 @@ function updateDockRelease()
     end
 end
 
-function setThrust()
+function setupThrust()
+    pwm.setup(TH_PIN, 50, 50)
+    pwm.start(TH_PIN)
 
-    if (thrustPos > 0) then
-        gpio.write(TH_PIN, gpio.HIGH)
-    else
-        gpio.write(TH_PIN, gpio.LOW)
-    end
 
 end
 
+
+function setThrust()
+    thrustVal = 50 + (thrustPos / 2)
+    pwm.setduty(TH_PIN, thrustVal)
+end
 
 -- -------------------------------------------------------------------------- --
 --                                END FUNCTIONS                               --
@@ -179,13 +156,9 @@ end
 
 
 -- Setup docking release
+setupThrust()
 setupDockRelease()
 
--- Setup the backup arrest
-setupBackupArrest()
-
-gpio.mode(TH_PIN, gpio.OUTPUT);
-gpio.write(TH_PIN, gpio.LOW);
 
 --setup function for communicating with atmega
 
@@ -200,9 +173,8 @@ function main()
    
     
     updateDockRelease()
-    setBackupArrest()
-    
     setThrust()
+    
 
     -- Toggle the backup arrest open/closed
 --    updateBackupArrest()
