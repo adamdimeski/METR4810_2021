@@ -15,7 +15,9 @@ DR_CLOSED_DUTY = 98
 ZERO_DEG_DUTY = 52
 -- Thruster
 TH_PIN = 5
-TH_START_DUTY = 50;
+TH_START_DUTY = 50
+
+sda, scl = 2, 1
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -30,6 +32,9 @@ thrustPos = 0 -- thrust percentage of EDF
 start = 0 -- start of mission, activates release from dock and activation of systems
 restart = 0 -- resets system for another mission, 0 for normal state, 1 for reset.
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
+accX = 0
+accY = 0
+accZ = 0
 status={}
 
 -- -------------------------------------------------------------------------- --
@@ -46,10 +51,8 @@ function receiveData()
     --   based on the new data
 
     dockRelease = tonumber(status.dockRelease)
-    backupArrest = tonumber(status.backupArrest)
     abort = tonumber(status.abort)
     drServoPos = tonumber(status.drServoPos)
-    baServoPos = tonumber(status.baServoPos)
     thrustPos = tonumber(status.thrustPos)
     start = tonumber(status.start)
     restart = tonumber(status.restart)
@@ -61,13 +64,14 @@ function sendData()
 
     sendStr = "";
     sendStr = sendStr.. dockRelease..",";
-    sendStr = sendStr.. backupArrest.. ",";
     sendStr = sendStr.. abort.. ",";
     sendStr = sendStr.. drServoPos.. ",";
-    sendStr = sendStr.. baServoPos.. ",";
     sendStr = sendStr.. thrustPos.. ",";
     sendStr = sendStr.. start.. ",";
     sendStr = sendStr.. restart.. ",";
+    sendStr = sendStr.. accX.. ",";
+    sendStr = sendStr.. accY.. ",";
+    sendStr = sendStr.. accZ.. ",";
     sendStr = sendStr.. powerCycle;
 
     -- use .. instead of + when adding strings
@@ -146,6 +150,20 @@ function setThrust()
     pwm.setduty(TH_PIN, thrustVal)
 end
 
+function setupAccelerometer()
+    i2c.setup(0, sda, scl, i2c.SLOW)  -- call i2c.setup() only once
+    adxl345.setup()
+end
+
+
+function readAccelerometer()
+    accX,accY,accZ = adxl345.read()
+
+end
+
+function triggerAbort()
+
+end
 -- -------------------------------------------------------------------------- --
 --                                END FUNCTIONS                               --
 -- -------------------------------------------------------------------------- --
@@ -158,7 +176,7 @@ end
 -- Setup docking release
 setupThrust()
 setupDockRelease()
-
+setupAcceleromter()
 
 --setup function for communicating with atmega
 
@@ -168,19 +186,13 @@ setupDockRelease()
 
 
 function main()
-
     -- setup thruster
-   
     
     updateDockRelease()
     setThrust()
+    readAccelerometer()
     
 
-    -- Toggle the backup arrest open/closed
---    updateBackupArrest()
---    print("backupArrest="..tostring(backupArrest))
-
-    -- setDockRelease()
 end
 
 -- ----------------------- OTHER NETWORKING PROCESSES ----------------------- --
@@ -202,7 +214,7 @@ wifi.sta.autoconnect(1)
 -- Connect to wifi and setup the main loop
 
 sys1 = tmr.create()
-sys1:alarm(5000, tmr.ALARM_SINGLE, function()
+sys1:alarm(3000, tmr.ALARM_SINGLE, function()
     sys = tmr.create()
     sys:alarm(1000, tmr.ALARM_SEMI, function()
         if wifi.sta.getip()== nil then

@@ -9,6 +9,9 @@ var thrustPos = 0; // thrust percentage of EDF
 var start = 0; // start of mission, activates release from dock and activation of systems
 var restart = 0; // resets system for another mission, 0 for normal state, 1 for reset.
 var powerCycle = 0; // 0 for normal state, 1 for restarting the circuits
+var accX = [];
+var accY = [];
+var accZ = [];
 
 
 //Do not add these variables to the FETCH request
@@ -27,8 +30,11 @@ function receiveData(csv)
 	baServoPos = parseInt(csv[4]);
 	thrustPos = parseInt(csv[5]);
 	start = parseInt(csv[6]);
-	restart = parseInt(csv[7]);
-	powerCycle = parseInt(csv[8]);
+	restart = parseInt(csv[6]);
+	accX.push(parseInt(csv[8]));
+	accY.push(parseInt(csv[9]));
+	accZ.push(parseInt(csv[10]));
+	powerCycle = parseInt(csv[11]);
 
 	//add more variables and unpack from data by incrementing the value in data
 }
@@ -49,6 +55,9 @@ async function sendData()
 	        				.then((response) => {
 										csv = $.csv.toArray(response);
 										receiveData(csv)
+										console.log(accX)
+										console.log(accY)
+										console.log(accZ)
 	            			console.log(data)
 									}).catch(function(err) {
 													alert(err);
