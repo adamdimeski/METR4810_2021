@@ -12,6 +12,7 @@ var powerCycle = 0; // 0 for normal state, 1 for restarting the circuits
 var accX = [];
 var accY = [];
 var accZ = [];
+var temp = 0;
 
 
 //Do not add these variables to the FETCH request
@@ -34,7 +35,8 @@ function receiveData(csv)
 	accX.push(parseInt(csv[8]));
 	accY.push(parseInt(csv[9]));
 	accZ.push(parseInt(csv[10]));
-	powerCycle = parseInt(csv[11]);
+	temp = parseInt(csv[11]);
+	powerCycle = parseInt(csv[12]);
 
 	//add more variables and unpack from data by incrementing the value in data
 }
