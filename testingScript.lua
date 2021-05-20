@@ -194,12 +194,12 @@ setupDockRelease()
 
 function main()
     -- setup thruster
-    
+
     updateDockRelease()
     setThrust()
     --readAccelerometer()
     getTemp()
-    
+
 
 end
 
@@ -232,7 +232,7 @@ sys1:alarm(3000, tmr.ALARM_SINGLE, function()
         else
             -- If connected to wifi
             print("Got IP. "..wifi.sta.getip())
-            
+
             -- Setup the main loop with witchcraft
             -- oneTimeSetup()
             mainTmr = tmr.create()

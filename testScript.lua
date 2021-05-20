@@ -264,7 +264,7 @@ sys:alarm(1000, tmr.ALARM_SEMI, function()
     else
         -- If connected to wifi
         print("Got IP. "..wifi.sta.getip())
-        
+
         -- Setup the main loop with witchcraft
         -- oneTimeSetup()
         mainTmr = tmr.create()
