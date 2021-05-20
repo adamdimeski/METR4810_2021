@@ -8,8 +8,8 @@ wifiPwd = "1300655506"
 -- Pin mappings
 
 DR_PIN = 6
-DR_OPEN_DUTY = 96
-DR_CLOSED_DUTY = 76
+DR_OPEN_DUTY = 69
+DR_CLOSED_DUTY = 98
 
 -- Misc
 ZERO_DEG_DUTY = 52
