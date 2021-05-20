@@ -8,14 +8,20 @@ wifiPwd = "1300655506"
 -- Pin mappings
 
 DR_PIN = 6
-DR_OPEN_DUTY = 96
-DR_CLOSED_DUTY = 76
+DR_OPEN_DUTY = 69
+DR_CLOSED_DUTY = 98
 
 -- Misc
 ZERO_DEG_DUTY = 52
 -- Thruster
 TH_PIN = 5
+<<<<<<< HEAD
 TH_START_DUTY = 50;
+=======
+TH_START_DUTY = 50
+
+sda, scl = 2, 1
+>>>>>>> adamTest
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -30,6 +36,10 @@ thrustPos = 0 -- thrust percentage of EDF
 start = 0 -- start of mission, activates release from dock and activation of systems
 restart = 0 -- resets system for another mission, 0 for normal state, 1 for reset.
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
+accX = 0
+accY = 0
+accZ = 0
+temp = 0
 status={}
 
 -- -------------------------------------------------------------------------- --
@@ -46,10 +56,8 @@ function receiveData()
     --   based on the new data
 
     dockRelease = tonumber(status.dockRelease)
-    backupArrest = tonumber(status.backupArrest)
     abort = tonumber(status.abort)
     drServoPos = tonumber(status.drServoPos)
-    baServoPos = tonumber(status.baServoPos)
     thrustPos = tonumber(status.thrustPos)
     start = tonumber(status.start)
     restart = tonumber(status.restart)
@@ -61,13 +69,15 @@ function sendData()
 
     sendStr = "";
     sendStr = sendStr.. dockRelease..",";
-    sendStr = sendStr.. backupArrest.. ",";
     sendStr = sendStr.. abort.. ",";
     sendStr = sendStr.. drServoPos.. ",";
-    sendStr = sendStr.. baServoPos.. ",";
     sendStr = sendStr.. thrustPos.. ",";
     sendStr = sendStr.. start.. ",";
     sendStr = sendStr.. restart.. ",";
+    sendStr = sendStr.. accX.. ",";
+    sendStr = sendStr.. accY.. ",";
+    sendStr = sendStr.. accZ.. ",";
+    sendStr = sendStr.. temp.. ",";
     sendStr = sendStr.. powerCycle;
 
     -- use .. instead of + when adding strings
@@ -136,6 +146,9 @@ end
 function setupThrust()
     pwm.setup(TH_PIN, 50, 50)
     pwm.start(TH_PIN)
+<<<<<<< HEAD
+
+=======
 
 
 end
@@ -146,6 +159,33 @@ function setThrust()
     pwm.setduty(TH_PIN, thrustVal)
 end
 
+function setupAccelerometer()
+    i2c.setup(0, sda, scl, i2c.SLOW)  -- call i2c.setup() only once
+    adxl345.setup()
+end
+
+
+function readAccelerometer()
+    accX,accY,accZ = adxl345.read()
+>>>>>>> adamTest
+
+end
+
+function triggerAbort()
+
+<<<<<<< HEAD
+function setThrust()
+    thrustVal = 50 + (thrustPos / 2)
+    pwm.setduty(TH_PIN, thrustVal)
+end
+
+=======
+end
+
+function getTemp()
+    temp = math.floor((adc.read(0) / 28) * 10 + 0.5) / 10
+end
+>>>>>>> adamTest
 -- -------------------------------------------------------------------------- --
 --                                END FUNCTIONS                               --
 -- -------------------------------------------------------------------------- --
@@ -158,6 +198,7 @@ end
 -- Setup docking release
 setupThrust()
 setupDockRelease()
+--setupAccelerometer()
 
 
 --setup function for communicating with atmega
@@ -168,19 +209,18 @@ setupDockRelease()
 
 
 function main()
-
     -- setup thruster
-   
-    
+
     updateDockRelease()
     setThrust()
+<<<<<<< HEAD
     
+=======
+    --readAccelerometer()
+    getTemp()
+>>>>>>> adamTest
 
-    -- Toggle the backup arrest open/closed
---    updateBackupArrest()
---    print("backupArrest="..tostring(backupArrest))
 
-    -- setDockRelease()
 end
 
 -- ----------------------- OTHER NETWORKING PROCESSES ----------------------- --
@@ -192,11 +232,17 @@ station_cfg.pwd=wifiPwd
 station_cfg.save=false
 wifi.setmode(wifi.STATION, true)
 wifi.sta.config(station_cfg)
+cfg = {}
+cfg.ip = "192.168.137.100"
+cfg.netmask = "255.255.255.0"
+cfg.gateway = "192.168.137.1"
+wifi.sta.setip(cfg)
+wifi.sta.autoconnect(1)
 
 -- Connect to wifi and setup the main loop
 
 sys1 = tmr.create()
-sys1:alarm(5000, tmr.ALARM_SINGLE, function()
+sys1:alarm(3000, tmr.ALARM_SINGLE, function()
     sys = tmr.create()
     sys:alarm(1000, tmr.ALARM_SEMI, function()
         if wifi.sta.getip()== nil then
@@ -206,7 +252,7 @@ sys1:alarm(5000, tmr.ALARM_SINGLE, function()
         else
             -- If connected to wifi
             print("Got IP. "..wifi.sta.getip())
-            
+
             -- Setup the main loop with witchcraft
             -- oneTimeSetup()
             mainTmr = tmr.create()
@@ -235,7 +281,7 @@ srv:listen(80,function(conn)
 
     print(payload) -- Print what the website sent
     receiveData() -- use the recieved data to repopulate our status variables
-    -- print(status.abort)
+    print(status.abort)
 
     -- Send data to the server
     conn:send("HTTP/1.1 200 OK\n")
