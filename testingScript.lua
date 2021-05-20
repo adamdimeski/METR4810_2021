@@ -15,13 +15,9 @@ DR_CLOSED_DUTY = 98
 ZERO_DEG_DUTY = 52
 -- Thruster
 TH_PIN = 5
-<<<<<<< HEAD
-TH_START_DUTY = 50;
-=======
 TH_START_DUTY = 50
 
 sda, scl = 2, 1
->>>>>>> adamTest
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -146,9 +142,6 @@ end
 function setupThrust()
     pwm.setup(TH_PIN, 50, 50)
     pwm.start(TH_PIN)
-<<<<<<< HEAD
-
-=======
 
 
 end
@@ -167,25 +160,16 @@ end
 
 function readAccelerometer()
     accX,accY,accZ = adxl345.read()
->>>>>>> adamTest
 
 end
 
 function triggerAbort()
 
-<<<<<<< HEAD
-function setThrust()
-    thrustVal = 50 + (thrustPos / 2)
-    pwm.setduty(TH_PIN, thrustVal)
-end
-
-=======
 end
 
 function getTemp()
     temp = math.floor((adc.read(0) / 28) * 10 + 0.5) / 10
 end
->>>>>>> adamTest
 -- -------------------------------------------------------------------------- --
 --                                END FUNCTIONS                               --
 -- -------------------------------------------------------------------------- --
@@ -213,12 +197,8 @@ function main()
 
     updateDockRelease()
     setThrust()
-<<<<<<< HEAD
-    
-=======
     --readAccelerometer()
     getTemp()
->>>>>>> adamTest
 
 
 end
