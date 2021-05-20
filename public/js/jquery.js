@@ -1,4 +1,4 @@
-var ip_address = "192.168.137.190";
+var ip_address = "192.168.137.100";
 
 var dockRelease = 1; // 0 for latched, 1 for unlatched
 var backupArrest = 0; // o for running, 1 for stopped

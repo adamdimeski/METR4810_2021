@@ -35,6 +35,7 @@ powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 accX = 0
 accY = 0
 accZ = 0
+temp = 0
 status={}
 
 -- -------------------------------------------------------------------------- --
@@ -72,6 +73,7 @@ function sendData()
     sendStr = sendStr.. accX.. ",";
     sendStr = sendStr.. accY.. ",";
     sendStr = sendStr.. accZ.. ",";
+    sendStr = sendStr.. temp.. ",";
     sendStr = sendStr.. powerCycle;
 
     -- use .. instead of + when adding strings
@@ -164,6 +166,10 @@ end
 function triggerAbort()
 
 end
+
+function getTemp()
+    temp = math.floor((adc.read(0) / 28) * 10 + 0.5) / 10
+end
 -- -------------------------------------------------------------------------- --
 --                                END FUNCTIONS                               --
 -- -------------------------------------------------------------------------- --
@@ -176,7 +182,8 @@ end
 -- Setup docking release
 setupThrust()
 setupDockRelease()
-setupAcceleromter()
+--setupAccelerometer()
+
 
 --setup function for communicating with atmega
 
@@ -190,7 +197,8 @@ function main()
     
     updateDockRelease()
     setThrust()
-    readAccelerometer()
+    --readAccelerometer()
+    getTemp()
     
 
 end
@@ -253,7 +261,7 @@ srv:listen(80,function(conn)
 
     print(payload) -- Print what the website sent
     receiveData() -- use the recieved data to repopulate our status variables
-    -- print(status.abort)
+    print(status.abort)
 
     -- Send data to the server
     conn:send("HTTP/1.1 200 OK\n")
