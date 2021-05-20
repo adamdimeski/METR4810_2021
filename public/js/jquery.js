@@ -25,26 +25,23 @@ var autoRefreshInterval = 1000; //milliseconds
 function receiveData(csv)
 {
 	dockRelease = parseInt(csv[0]);
-	backupArrest = parseInt(csv[1]);
-	abort = parseInt(csv[2]);
-	drServoPos = parseInt(csv[3]);
-	baServoPos = parseInt(csv[4]);
-	thrustPos = parseInt(csv[5]);
-	start = parseInt(csv[6]);
-	restart = parseInt(csv[6]);
-	accX.push(parseInt(csv[8]));
-	accY.push(parseInt(csv[9]));
-	accZ.push(parseInt(csv[10]));
-	temp = parseInt(csv[11]);
-	powerCycle = parseInt(csv[12]);
+	abort = parseInt(csv[1]);
+	drServoPos = parseInt(csv[2]);
+	thrustPos = parseInt(csv[3]);
+	start = parseInt(csv[4]);
+	restart = parseInt(csv[5]);
+	accX.push(parseInt(csv[6]));
+	accY.push(parseInt(csv[7]));
+	accZ.push(parseInt(csv[8]));
+	temp = parseInt(csv[9]);
 
 	//add more variables and unpack from data by incrementing the value in data
 }
 
 async function sendData()
 {
-	data = "dockRelease=" + dockRelease + ", " + "backupArrest=" + backupArrest + ", " + "abort=" + abort + ", " + "drServoPos=" + drServoPos + ", "
-	+ "baServoPos=" + baServoPos + ", " + "thrustPos=" + thrustPos + ", " + "start=" + start + ", " + "restart=" + restart + ", " + "powerCycle=" + powerCycle;
+	data = "dockRelease=" + dockRelease + ", " + "abort=" + abort + ", " + "drServoPos=" + drServoPos + ", "
+  + "thrustPos=" + thrustPos + ", " + "start=" + start + ", " + "restart=" + restart;
 
 	//add more variables to the string above to send to the microcontroller
 
@@ -87,6 +84,8 @@ $(document).ready(function(){
 			$("#thrusttxt").text(thrustPos);
 
 			sendData();
+			$("#temptxt").text(temp + " °C");
+			//getting data and plotting it
 
 			if(dockRelease != 0)
 			{
@@ -96,25 +95,6 @@ $(document).ready(function(){
 			{
 				$("#dockingtxt").text("DISABLED");
 			}
-
-			if(dockRelease != 0)
-			{
-				$("#backuptxt").text("ENABLED");
-			}
-			else
-			{
-				$("#backuptxt").text("DISABLED");
-			}
-
-			if(dockRelease != 0)
-			{
-				$("#backuptxt").text("ENABLED");
-			}
-			else
-			{
-				$("#backuptxt").text("DISABLED");
-			}
-
 
 
 
@@ -143,17 +123,6 @@ $("#dockDeactivateBtn").click(function(){
 		sendData();
 });
 
-$("#arrestActivateBtn").click(function(){
-		backupArrest = 1;
-		$("#backuptxt").text("ENABLED");
-		sendData();
-});
-
-$("#arrestDeactivateBtn").click(function(){
-		backupArrest = 0;
-		$("#backuptxt").text("DISABLED");
-		sendData();
-});
 
 $("#autoRefreshbtn").click(function(){
 		if (autoupdate != 0)

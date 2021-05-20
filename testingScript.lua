@@ -17,7 +17,7 @@ ZERO_DEG_DUTY = 52
 TH_PIN = 5
 TH_START_DUTY = 50
 
-sda, scl = 2, 1
+sda, scl = 1, 2
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -57,7 +57,6 @@ function receiveData()
     thrustPos = tonumber(status.thrustPos)
     start = tonumber(status.start)
     restart = tonumber(status.restart)
-    powerCycle = tonumber(status.powerCycle)
 end
 
 function sendData()
@@ -73,8 +72,7 @@ function sendData()
     sendStr = sendStr.. accX.. ",";
     sendStr = sendStr.. accY.. ",";
     sendStr = sendStr.. accZ.. ",";
-    sendStr = sendStr.. temp.. ",";
-    sendStr = sendStr.. powerCycle;
+    sendStr = sendStr.. temp;
 
     -- use .. instead of + when adding strings
     return sendStr
@@ -164,7 +162,14 @@ function readAccelerometer()
 end
 
 function triggerAbort()
-
+    if(abort == 1) then
+        abort = 0
+        thrustPos = 0
+        gpio.write(8,gpio.HIGH)
+        sys2 = tmr.create()
+        sys2:alarm(300, tmr.ALARM_SINGLE, function() end)
+        gpio.write(8,gpio.LOW)
+    end
 end
 
 function getTemp()
@@ -182,8 +187,9 @@ end
 -- Setup docking release
 setupThrust()
 setupDockRelease()
---setupAccelerometer()
-
+setupAccelerometer()
+gpio.mode(8, gpio.OUTPUT) -- setup abort pin
+gpio.write(8,gpio.LOW)
 
 --setup function for communicating with atmega
 
@@ -197,8 +203,9 @@ function main()
 
     updateDockRelease()
     setThrust()
-    --readAccelerometer()
+    readAccelerometer()
     getTemp()
+    triggerAbort()
 
 
 end
