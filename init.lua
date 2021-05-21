@@ -7,14 +7,14 @@ wifiPwd = "1300655506"
 
 -- Pin mappings
 
-DR_PIN = 6
+DR_PIN = 5
 DR_OPEN_DUTY = 69
 DR_CLOSED_DUTY = 98
 
 -- Misc
 ZERO_DEG_DUTY = 52
 -- Thruster
-TH_PIN = 5
+TH_PIN = 6
 TH_START_DUTY = 50
 
 sda, scl = 1, 2

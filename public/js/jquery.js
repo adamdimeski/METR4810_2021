@@ -13,6 +13,7 @@ var accX = [];
 var accY = [];
 var accZ = [];
 var temp = 0;
+var pressure = 0;
 
 
 //Do not add these variables to the FETCH request
@@ -33,7 +34,8 @@ function receiveData(csv)
 	accX.push(parseInt(csv[6]));
 	accY.push(parseInt(csv[7]));
 	accZ.push(parseInt(csv[8]));
-	temp = parseInt(csv[9]);
+	pressure = parseInt(csv[9]);
+	temp = parseInt(csv[10]);
 
 	//add more variables and unpack from data by incrementing the value in data
 }
