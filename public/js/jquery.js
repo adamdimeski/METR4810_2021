@@ -43,7 +43,7 @@ function receiveData(csv)
 	accX = parseInt(csv[7]);
 	accY = parseInt(csv[8]);
 	accZ = parseInt(csv[9]);
-	pressure = parseInt(csv[10]);
+	pressure = parseInt(csv[10])/100;
 	temperature = parseInt(csv[11]);
 	if (plot == 1)
 	{
@@ -102,16 +102,32 @@ var optionsAcc = {
 	title: {
 		text: "Acceleration"
 	},
+	axisX:{
+ 		title:"Time (100 Milliseconds)",
+	},
+	axisY:{
+ 		title:"Acceleration",
+	},
+	legend: {
+       horizontalAlign: "center", // "center" , "right"
+       verticalAlign: "bottom"  // "top" , "bottom"
+     },
 	data: [{
 		type: "line",
+		name: "X",
+		showInLegend: true,
 		dataPoints: accDataX
 	},
 	{
 		type: "line",
+		name: "Y",
+		showInLegend: true,
 		dataPoints: accDataY
 	},
 	{
 		type: "line",
+		name: "Z",
+		showInLegend: true,
 		dataPoints: accDataZ
 	}
 ]
@@ -122,8 +138,14 @@ var optionsPressure = {
 	title: {
 		text: "Pressure"
 	},
+	legend: {
+       horizontalAlign: "center", // "center" , "right"
+       verticalAlign: "bottom"  // "top" , "bottom"
+     },
 	data: [{
 		type: "line",
+		name: "Pressure (hPa)",
+		showInLegend: true,
 		dataPoints: pressureData
 	}]
 };
@@ -133,8 +155,14 @@ var optionsTemperature = {
 	title: {
 		text: "Temperature"
 	},
+	legend: {
+       horizontalAlign: "center", // "center" , "right"
+       verticalAlign: "bottom"  // "top" , "bottom"
+     },
 	data: [{
 		type: "line",
+		name: "Temperature (°C)",
+		showInLegend: true,
 		dataPoints: temperatureData
 	}]
 };
