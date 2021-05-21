@@ -6,7 +6,10 @@
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.js"></script>
   <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/style.css">
-  <head>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+
+  <head style  = "font-family: 'Open Sans', sans-serif;">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <link rel="stylesheet" href = "css/bootstrap.min.css" rel="stylesheet" type="text/css" >
@@ -15,13 +18,12 @@
 
     <title>METR4810</title>
   </head>
-  <body style = "background-color: rgb(40,40,40); color: white;">
+  <body style = "background-color: rgb(40,40,40); color: white; font-family: 'Open Sans', sans-serif;">
 
-		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-		  <a class="navbar-brand" href="#">METR4810 Lander Control</a>
-		  </button>
-		</nav>
 
+    <div class="bg-imagealign-middle" style=" background-image: url('mars-header.jpg'); height: 50vh; background-repeat: no-repeat; background-size: cover; text-align: center; ">
+  		  <h1 class="align-middle">METR4810 Lander Control</h1>
+    </div>
 	<div style="margin-top:30px; margin-left: 20px;">
 
     <div>
@@ -33,23 +35,31 @@
     <div class="p-2 m-2" id="chartContainerTemperature" style="height: 300px; width: 25%; "></div>
   </div>
   <br>
-  <h2 style = "text-align: center;">Control Panel</h2>
+  <hr class="solid" style = "border: 1px solid gray">
+  <br>
+  <h2>Control Panel</h2>
   <div class="d-flex flex-wrap justify-content-center" id = "controlpanel">
       <div id = "controlpanel_1" class="d-flex flex-wrap flex-column">
         <h2> Settings</h2>
         <br>
         <div class = "p-2 d-flex flex-row d-flex justify-content-between">
-          <label class = "p-2" style = "text-align: left;">IP Address: </label>
-          <input class = "p-2 control_button" type="text" id="ip_addr" style = "background-color: white; color: black"><br>
+          <label class = "m-2" style = "text-align: left;">IP Address: </label>
+          <input class = "m-2 btn btn-primary" type="text" id="ip_addr" style = "background-color: white; color: black"><br>
           <br class = "p-2">
-          <button class = "p-2 justify-content-end btn btn-primary" id = "ip_address_button">Set</button>
+          <button class = "m-2 justify-content-end btn btn-primary" id = "ip_address_button">Set</button>
         </div>
         <br class = "p-2">
         <div class = "d-flex flex-row d-flex justify-content-between">
-          <label class = "p-2" style = "text-align: left;">Auto-Refresh</label>
-          <label id = "autoRefreshtxt" class = "p-2">OFF</label>
+          <label class = "m-2" style = "text-align: left;">Auto-Refresh</label>
+          <label id = "autoRefreshtxt" class = "m-2">OFF</label>
           <br class = "p-2">
-          <button id = "autoRefreshbtn" class = "p-2  btn btn-primary">Set/Reset</button>
+          <button id = "autoRefreshbtn" class = "m-2 btn btn-primary">Set/Reset</button>
+        </div>
+        <div class = "d-flex flex-row d-flex justify-content-between">
+          <label class = "m-2" style = "text-align: left;">Plot</label>
+          <button id = "startPlotBtn" class = "m-2  btn btn-primary">Start</button>
+          <button id = "stopPlotBtn" class = "m-2  btn btn-primary">Stop</button>
+          <button id = "clearPlotBtn" class = "m-2  btn btn-primary">Clear</button>
         </div>
         <br>
       </div>
@@ -57,29 +67,29 @@
         <div style = "text-align: center; margin-top: 0px; margin: 10px;">
           <h2> Status</h2>
           <div class = "d-flex flex-row d-flex justify-content-between" style = "">
-            <label class = "p-2" style = "text-align: left;">IP Address</label>
-            <br class = "p-5">
-            <label id = "ipAdresstxt" class = "p-2" style = "text-align: left;">IP Address</label>
+            <label class = "mx-2" style = "text-align: left;">IP Address</label>
+            <br class = "mx-5">
+            <label id = "ipAdresstxt" class = "mx-2" style = "text-align: left;">IP Address</label>
           </div>
           <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "p-2" style = "text-align: left;">Start</label>
-            <label id = "starttxt" class = "p-2" style = "text-align: left;">NO</label>
+            <label class = "mx-2" style = "text-align: left;">Start</label>
+            <label id = "starttxt" class = "mx-2" style = "text-align: left;">NO</label>
           </div>
           <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "p-2" style = "text-align: left;"> Thrust %</label>
-            <label id = "thrusttxt" class = "p-2" style = "text-align: left;">0</label>
+            <label class = "mx-2" style = "text-align: left;"> Thrust %</label>
+            <label id = "thrusttxt" class = "mx-2" style = "text-align: left;">0</label>
           </div>
           <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "p-2" style = "text-align: left;" >Docking Adaptor</label>
-            <label id = "dockingtxt" class = "p-2" style = "text-align: left;">DISABLED</label>
+            <label class = "mx-2" style = "text-align: left;" >Docking Adaptor</label>
+            <label id = "dockingtxt" class = "mx-2" style = "text-align: left;">LOCKED</label>
           </div>
           <br>
           <div class = "rd-flex flex-row d-flex justify-content-between">
-            <label class = "p-2" style = "text-align: left;" >Temperature</label>
-            <label id = "temptxt" class = "p-2" style = "text-align: left;">0</label>
+            <label class = "mx-2" style = "text-align: left;" >Temperature</label>
+            <label id = "temptxt" class = "mx-2" style = "text-align: left;">0</label>
           </div>
           <br>
       </div>
@@ -87,16 +97,18 @@
       <div id = "controlpanel_3" class="d-flex flex-wrap flex-column">
         <div style = "text-align: center; margin-top: 0px; margin: 10px;">
           <h2> Control</h2>
-          <div class = "d-flex flex-row d-flex justify-content-between" style = "text-align: left;">
-            <label class = "p-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
-            <button id = "dockActivateBtn" class = "p-2 btn btn-primary">Activate</button>
-            <button id = "dockDeactivateBtn" class = "p-2 btn btn-primary">Deactivate</button>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
+            <button id = "dockActivateBtn" class = "m-2 btn btn-primary">Unlock</button>
+            <button id = "dockDeactivateBtn" class = "m-2 btn btn-primary">Lock</button>
           </div>
           <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "p-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Control</label>
+            <label class = "m-2">Control</label>
             <button id = "startBtn" class = "m-2 btn btn-primary">Start</button>
-            <button id = "abbortBtn" class = "m-2 btn btn-primary">Abort</button>
+            <button id = "stopBtn" class = "m-2 btn btn-primary">Stop</button>
+            <button id = "restartBtn" class = "m-2 btn btn-warning">Restart</button>
+            <button id = "abbortBtn" class = "m-2 btn btn-danger">Abort</button>
           </div>
           <br>
           <div class = "d-flex flex-row d-flex justify-content-between">

@@ -100,17 +100,27 @@ async function sendData()
 var optionsAcc = {
 	theme: "dark2",
 	title: {
-		text: "Acceleration"
+		text: "Acceleration",
+		fontFamily: "Open Sans",
+		fontType: "sans-serif"
 	},
 	axisX:{
  		title:"Time (100 Milliseconds)",
+		gridThickness: 0,
+		fontFamily: "Open Sans",
+		fontType: "sans-serif"
 	},
 	axisY:{
  		title:"Acceleration",
+		gridThickness: 0,
+		fontFamily: "Open Sans",
+		fontType: "sans-serif"
 	},
 	legend: {
        horizontalAlign: "center", // "center" , "right"
-       verticalAlign: "bottom"  // "top" , "bottom"
+       verticalAlign: "bottom",
+			 fontFamily: "Open Sans",
+	 			fontType: "sans-serif"  // "top" , "bottom"
      },
 	data: [{
 		type: "line",
@@ -136,11 +146,27 @@ var optionsAcc = {
 var optionsPressure = {
 	theme: "dark2",
 	title: {
-		text: "Pressure"
+		text: "Pressure",
+		fontFamily: "Open Sans",
+		fontType: "sans-serif"
+	},
+	axisX:{
+ 		title:"Time (100 Milliseconds)",
+		gridThickness: 0,
+		fontFamily: "Open Sans",
+		fontType: "sans-serif"
+	},
+	axisY:{
+ 		title:"Pressure (hPa)",
+		gridThickness: 0,
+		fontFamily: "Open Sans",
+		fontType: "sans-serif"
 	},
 	legend: {
        horizontalAlign: "center", // "center" , "right"
-       verticalAlign: "bottom"  // "top" , "bottom"
+       verticalAlign: "bottom",  // "top" , "bottom"
+			 fontFamily: "Open Sans",
+	 		fontType: "sans-serif"
      },
 	data: [{
 		type: "line",
@@ -153,11 +179,27 @@ var optionsPressure = {
 var optionsTemperature = {
 	theme: "dark2",
 	title: {
-		text: "Temperature"
+		text: "Temperature",
+		fontFamily: "Open Sans",
+		fontType: "sans-serif"
+	},
+	axisX:{
+ 		title:"Time (100 Milliseconds)",
+		gridThickness: 0,
+		fontFamily: "Open Sans",
+		fontType: "sans-serif"
+	},
+	axisY:{
+ 		title:"Temperature (°C)",
+		gridThickness: 0,
+		fontFamily: "Open Sans",
+		fontType: "sans-serif"
 	},
 	legend: {
        horizontalAlign: "center", // "center" , "right"
-       verticalAlign: "bottom"  // "top" , "bottom"
+       verticalAlign: "bottom",  // "top" , "bottom"
+			 fontFamily: "Open Sans",
+	 		fontType: "sans-serif"
      },
 	data: [{
 		type: "line",
@@ -214,14 +256,14 @@ $("#ip_address_button").click(function(){
 
 $("#dockActivateBtn").click(function(){
 		dockRelease = 1;
-		$("#dockingtxt").text("ENABLED");
+		$("#dockingtxt").text("UNLOCKED");
 		dockingtxt
 		sendData();
 });
 
 $("#dockDeactivateBtn").click(function(){
 		dockRelease = 0;
-		$("#dockingtxt").text("DISABLED");
+		$("#dockingtxt").text("LOCKED");
 		sendData();
 });
 
@@ -237,6 +279,25 @@ $("#autoRefreshbtn").click(function(){
 			autoupdate = 1
 			$("#autoRefreshtxt").text("ON");
 		}
+});
+
+$("#clearPlotBtn").click(function(){
+	accDataX.length = 0;
+	accDataY.length = 0;
+	accDataZ.length = 0;
+	pressureData.length = 0;
+	temperatureData.length = 0;
+	xCount = 0;
+	$("#chartContainerAcc").CanvasJSChart().render()
+	$("#chartContainerPressure").CanvasJSChart().render()
+	$("#chartContainerTemperature").CanvasJSChart().render()
+});
+
+$("#startPlotBtn").click(function(){
+	plot = 1
+});
+$("#stopPlotBtn").click(function(){
+	plot = 0
 });
 
 });
