@@ -5,7 +5,6 @@
   <script src="js/jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.js"></script>
   <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
-  <script src="js/jcanvas.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/style.css">
   <head>
     <meta charset="utf-8">
@@ -28,72 +27,81 @@
     <div>
       <h2>Overview</h2>
 
+  <div class="d-flex flex-wrap justify-content-center">
+    <div class="p-2" id="chartContainerAcc" style="height: 300px; width: 25%;"></div>
+    <div class="p-2" id="chartContainerPressure" style="height: 300px; width: 25%;"></div>
+    <div class="p-2" id="chartContainerTemperature" style="height: 300px; width: 25%; "></div>
+  </div>
+  <br>
   <h2 style = "text-align: center;">Control Panel</h2>
-  <div id = "controlpanel" class = "row">
-      <div id = "controlpanel_1" class = "col-4">
+  <div class="d-flex flex-wrap justify-content-center" id = "controlpanel">
+      <div id = "controlpanel_1" class="d-flex flex-wrap flex-column">
         <h2> Settings</h2>
         <br>
-        <div class = "row">
-          <label class = "col" style = "text-align: left;">IP Address: </label>
-          <input class = "col control_button" type="text" id="ip_addr" style = "background-color: white; color: black"><br>
-          <button class = "col-2 control_button" id = "ip_address_button">Set</button>
+        <div class = "p-2 d-flex flex-row d-flex justify-content-between">
+          <label class = "p-2" style = "text-align: left;">IP Address: </label>
+          <input class = "p-2 control_button" type="text" id="ip_addr" style = "background-color: white; color: black"><br>
+          <br class = "p-2">
+          <button class = "p-2 justify-content-end btn btn-primary" id = "ip_address_button">Set</button>
         </div>
-        <br>
-        <div class = "row">
-          <label class = "col" style = "text-align: left;">Auto-Refresh</label>
-          <label id = "autoRefreshtxt"class = "col-2" style = "text-align: left;">OFF</label>
-          <button id = "autoRefreshbtn" class = "col-2 control_button" id = "ip_address_button">Set/Reset</button>
+        <br class = "p-2">
+        <div class = "d-flex flex-row d-flex justify-content-between">
+          <label class = "p-2" style = "text-align: left;">Auto-Refresh</label>
+          <label id = "autoRefreshtxt" class = "p-2">OFF</label>
+          <br class = "p-2">
+          <button id = "autoRefreshbtn" class = "p-2  btn btn-primary">Set/Reset</button>
         </div>
         <br>
       </div>
-      <div id = "controlpanel_2" class = "col-3">
-        <div style = "text-align: center; margin-top: 0px; margin: 10px; font-size: 14px;">
+      <div id = "controlpanel_2" class="d-flex flex-wrap flex-column">
+        <div style = "text-align: center; margin-top: 0px; margin: 10px;">
           <h2> Status</h2>
-          <div class = "row" style = "">
-            <label class = "col-6" style = "text-align: left;">IP Address</label>
-            <label id = "ipAdresstxt"class = "col-6" style = "text-align: left;">IP Address</label>
+          <div class = "d-flex flex-row d-flex justify-content-between" style = "">
+            <label class = "p-2" style = "text-align: left;">IP Address</label>
+            <br class = "p-5">
+            <label id = "ipAdresstxt" class = "p-2" style = "text-align: left;">IP Address</label>
           </div>
           <br>
-          <div class = "row" style = "">
-            <label class = "col-6" style = "text-align: left;">Start</label>
-            <label id = "starttxt"class = "col-6" style = "text-align: left;">NO</label>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "p-2" style = "text-align: left;">Start</label>
+            <label id = "starttxt" class = "p-2" style = "text-align: left;">NO</label>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col-6" style = "text-align: left;"> Thrust %</label>
-            <label id = "thrusttxt"class = "col-6" style = "text-align: left;">0</label>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "p-2" style = "text-align: left;"> Thrust %</label>
+            <label id = "thrusttxt" class = "p-2" style = "text-align: left;">0</label>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col-6" style = "text-align: left;" >Docking Adaptor</label>
-            <label id = "dockingtxt"class = "col-6" style = "text-align: left;">DISABLED</label>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "p-2" style = "text-align: left;" >Docking Adaptor</label>
+            <label id = "dockingtxt" class = "p-2" style = "text-align: left;">DISABLED</label>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col-6" style = "text-align: left;" >Temperature</label>
-            <label id = "temptxt"class = "col-6" style = "text-align: left;">0</label>
+          <div class = "rd-flex flex-row d-flex justify-content-between">
+            <label class = "p-2" style = "text-align: left;" >Temperature</label>
+            <label id = "temptxt" class = "p-2" style = "text-align: left;">0</label>
           </div>
           <br>
       </div>
       </div>
-      <div id = "controlpanel_3" class = "col-4">
-        <div style = "text-align: center; margin-top: 0px; margin: 10px; font-size: 14px;">
+      <div id = "controlpanel_3" class="d-flex flex-wrap flex-column">
+        <div style = "text-align: center; margin-top: 0px; margin: 10px;">
           <h2> Control</h2>
-          <div class = "row" style = "text-align: left;">
-            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
-            <button id = "dockActivateBtn" class = "col-2 control_button">Activate</button>
-            <button id = "dockDeactivateBtn"class = "col-2 control_button">Deactivate</button>
+          <div class = "d-flex flex-row d-flex justify-content-between" style = "text-align: left;">
+            <label class = "p-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
+            <button id = "dockActivateBtn" class = "p-2 btn btn-primary">Activate</button>
+            <button id = "dockDeactivateBtn" class = "p-2 btn btn-primary">Deactivate</button>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Control</label>
-            <button id = "startBtn" class = "col-2 control_button">Start</button>
-            <button id = "abbortBtn"class = "col-2 control_button">Abort</button>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "p-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Control</label>
+            <button id = "startBtn" class = "m-2 btn btn-primary">Start</button>
+            <button id = "abbortBtn" class = "m-2 btn btn-primary">Abort</button>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Thrust Adjust</label>
-            <input type="range" min="0" max="100" value="0" class="slider" id="thrustAdjust">
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Thrust Adjust</label>
+            <input class = "m-2" type="range" min="0" max="100" value="0" class="slider" id="thrustAdjust">
           </div>
           <br>
         </div>

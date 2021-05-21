@@ -1,24 +1,9 @@
-.control_button
-{
-border-radius: 5px;
-border-width: 0px;
-color: white;
-background-color: rgb(30,30,150);
-padding: 5px;
-margin-right: 3px;
-}
+
 
 .control_button:active{
   background-color:  rgb(50,150,200);:
 }
 
-#controlpanel
-{
-  vertical-align: center;
-  font-size: 16px;
-  font-weight: bold;
-  margin-left: 5%;
-}
 
 #controlpanel_1
 {
@@ -41,30 +26,7 @@ margin-right: 3px;
   margin: 5px;
   text-align: center;
 }
-#outer
-{
-  height: 173px;
-}
 
-#img
-{
-  left:37%;
-  position: absolute;
-  background-color: grey;
-  border-radius: 5px;
-  border-width: 0px;
-  padding: 10px;
-  width:467px;
-  height: 173px;
-}
-#html-canvas
-{
-  left:37%;
-  position: absolute;
-  height: 173px;
-  width: 467px;
-  padding: 10px;
-}
 
 #keycapture_button
 {

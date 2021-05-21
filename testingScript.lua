@@ -7,14 +7,14 @@ wifiPwd = "1300655506"
 
 -- Pin mappings
 
-DR_PIN = 6
+DR_PIN = 5
 DR_OPEN_DUTY = 69
 DR_CLOSED_DUTY = 98
 
 -- Misc
 ZERO_DEG_DUTY = 52
 -- Thruster
-TH_PIN = 5
+TH_PIN = 6
 TH_START_DUTY = 50
 
 sda, scl = 1, 2
@@ -30,12 +30,14 @@ drServoPos = 0 -- Servo position for dock release, -1 if not being used
 baServoPos = 0 -- Servo position for backup arrest, -1 if not being used
 thrustPos = 0 -- thrust percentage of EDF
 start = 0 -- start of mission, activates release from dock and activation of systems
+stop = 0
 restart = 0 -- resets system for another mission, 0 for normal state, 1 for reset.
 powerCycle = 0 -- 0 for normal state, 1 for restarting the circuits
 accX = 0
 accY = 0
 accZ = 0
 temp = 0
+pressure = 0
 status={}
 
 -- -------------------------------------------------------------------------- --
@@ -56,6 +58,7 @@ function receiveData()
     drServoPos = tonumber(status.drServoPos)
     thrustPos = tonumber(status.thrustPos)
     start = tonumber(status.start)
+    stop = tonumber(status.stop)
     restart = tonumber(status.restart)
 end
 
@@ -68,60 +71,21 @@ function sendData()
     sendStr = sendStr.. drServoPos.. ",";
     sendStr = sendStr.. thrustPos.. ",";
     sendStr = sendStr.. start.. ",";
+    sendStr = sendStr.. stop.. ",";
     sendStr = sendStr.. restart.. ",";
     sendStr = sendStr.. accX.. ",";
     sendStr = sendStr.. accY.. ",";
     sendStr = sendStr.. accZ.. ",";
+    sendStr = sendStr.. pressure.. ",";
     sendStr = sendStr.. temp;
 
     -- use .. instead of + when adding strings
     return sendStr
 end
 
--- ---------------------------------- SERVO --------------------------------- --
-
-function setAngle(pin, angle)
-    -- Set the angle of a servo (0-180) (1ms-2ms pulse)
-    -- Does nothing if given an angle outside 0-180
-
-    if angle>0 and angle<180 then
-        dutyTime = 1 + 1*(angle/180) -- time of pulse in ms
-        dutyCycle = (dutyTime/20) * 1023 -- the duty cucle out of 1023
-        pwm.setduty(MOTOR_PIN, dutyCycle) -- set the servo to the given angle
-    end
-    -- If angle out of range do nothing
-end
-
 
 -- ----------------------------- DOCKING RELEASE ---------------------------- --
 
-function setupDockRelease()
-    -- Sets up the docking release mechanism (starts in closed position)
-
-    dockRelease = 0 -- set status (start with DR closed)
-    pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY) -- setup pwm settings (50Hz)
-    pwm.start(DR_PIN) -- start sending pwm signal
-end
-
-function toggleDockRelease()
-    -- Toggles the dock release mechanism open/closed
-    -- pwm.stop(DR_PIN) -- start sending pwm signal
-
-    if(dockRelease == 0) then
-        -- If NOT currently released
-        -- Set the dock release to the open position
-        pwm.setduty(DR_PIN,DR_OPEN_DUTY) --DR_OPEN_DUTY
-        -- Record our new status
-        dockRelease = 1
-    else
-        -- If currently released
-        -- Set the dock release to the closed position
-        pwm.setduty(DR_PIN,DR_CLOSED_DUTY)
-        -- Record our new status
-        dockRelease = 0
-    end
-    -- pwm.start(DR_PIN) -- start sending pwm signal
-end
 
 function updateDockRelease()
     -- Updates the dock release mechanism open/closed based on our desired dockRelease status
@@ -137,27 +101,33 @@ function updateDockRelease()
     end
 end
 
-function setupThrust()
+
+
+function setup()
+
+    -- dock release setup
+    dockRelease = 0 -- set status (start with DR closed)
+    pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY) -- setup pwm settings (50Hz)
+    pwm.start(DR_PIN) -- start sending pwm signal
+
     pwm.setup(TH_PIN, 50, 50)
     pwm.start(TH_PIN)
 
-
+    -- accelerom3ter and baromter
+    i2c.setup(0, sda, scl, i2c.SLOW)  -- call i2c.setup() only once
+    adxl345.setup()
+    bmp085.setup()
 end
-
-
 function setThrust()
     thrustVal = 50 + (thrustPos / 2)
     pwm.setduty(TH_PIN, thrustVal)
 end
 
-function setupAccelerometer()
-    i2c.setup(0, sda, scl, i2c.SLOW)  -- call i2c.setup() only once
-    adxl345.setup()
-end
 
 
 function readAccelerometer()
     accX,accY,accZ = adxl345.read()
+    pressure= bmp085.pressure()
 
 end
 
@@ -185,9 +155,7 @@ end
 
 
 -- Setup docking release
-setupThrust()
-setupDockRelease()
-setupAccelerometer()
+setup()
 gpio.mode(8, gpio.OUTPUT) -- setup abort pin
 gpio.write(8,gpio.LOW)
 
@@ -200,7 +168,7 @@ gpio.write(8,gpio.LOW)
 
 function main()
     -- setup thruster
-
+    print(node.heap())
     updateDockRelease()
     setThrust()
     readAccelerometer()
@@ -209,6 +177,7 @@ function main()
 
 
 end
+
 
 -- ----------------------- OTHER NETWORKING PROCESSES ----------------------- --
 
