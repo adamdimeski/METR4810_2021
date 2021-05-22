@@ -60,6 +60,7 @@ function receiveData()
     start = tonumber(status.start)
     stop = tonumber(status.stop)
     restart = tonumber(status.restart)
+    powerCycle = tonumber(status.powerCycle)
 end
 
 function sendData()
@@ -166,11 +167,24 @@ function main()
     end
 
     if (powerCycle == 1) then
-        node.restart()
+        start = 0
+        stop = 0
+        thrustPos = 0
+        abort = 0
+        powerCycle = 0
+    else
+    
     end
     
     if (stop == 1) then
         start = 0
+        thrustPos = 0
+        
+    end
+
+     if (abort == 1) then
+        start = 0
+        stop = 1
         thrustPos = 0
         
     end
@@ -180,6 +194,7 @@ function main()
         stop = 1
         dockRelease = 0 -- locked
         thrustPos = 0
+        abort = 0
     end
     
     updateDockRelease()

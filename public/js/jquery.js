@@ -23,6 +23,12 @@ var pressureData = [];
 var temperatureData = [];
 var xCount = 0;
 var plot = 1;
+
+var accXOffset = 240;
+var accYOffset = 20;
+var accZOffset = 108;
+var accMultiplier = 0.004;
+
 //Do not add these variables to the FETCH request
 var autoupdate = 0;
 var autoRefreshInterval = 200; //milliseconds
@@ -35,18 +41,18 @@ function receiveData(csv)
 {
 	dockRelease = parseInt(csv[0]);
 	thrustPos = parseInt(csv[1]);
-	accX = parseInt(csv[2]);
-	accY = parseInt(csv[3]);
-	accZ = parseInt(csv[4]);
+	accX = (parseInt(csv[2]) - accXOffset) * accMultiplier;
+	accY = (parseInt(csv[3]) + accYOffset) * accMultiplier;
+	accZ = (parseInt(csv[4]) + accZOffset) * accMultiplier;
 	pressure = parseInt(csv[5])/100;
 	temperature = parseInt(csv[6]);
 	if (plot == 1)
 	{
-	  accDataX.push({x: xCount, y: accX});
-		accDataY.push({x: xCount, y: accY});
-		accDataZ.push({x: xCount, y: accZ});
-		pressureData.push({x: xCount, y: pressure});
-		temperatureData.push({x: xCount, y: temperature});
+	  accDataX.push({x: (xCount * autoRefreshInterval * 0.001), y: accX});
+		accDataY.push({x: (xCount * autoRefreshInterval * 0.001), y: accY});
+		accDataZ.push({x: (xCount * autoRefreshInterval * 0.001), y: accZ});
+		pressureData.push({x: (xCount * autoRefreshInterval * 0.001), y: pressure});
+		temperatureData.push({x: (xCount * autoRefreshInterval * 0.001), y: temperature});
 		xCount = xCount + 1;
 		$("#chartContainerAcc").CanvasJSChart().render()
 		$("#chartContainerPressure").CanvasJSChart().render()
@@ -95,13 +101,13 @@ var optionsAcc = {
 		fontType: "sans-serif"
 	},
 	axisX:{
- 		title:"Time (100 Milliseconds)",
+ 		title:"Time (Seconds)",
 		gridThickness: 0,
 		fontFamily: "Open Sans",
 		fontType: "sans-serif"
 	},
 	axisY:{
- 		title:"Acceleration",
+ 		title:"Acceleration (G)",
 		gridThickness: 0,
 		fontFamily: "Open Sans",
 		fontType: "sans-serif"
@@ -141,7 +147,7 @@ var optionsPressure = {
 		fontType: "sans-serif"
 	},
 	axisX:{
- 		title:"Time (100 Milliseconds)",
+ 		title:"Time (Seconds)",
 		gridThickness: 0,
 		fontFamily: "Open Sans",
 		fontType: "sans-serif"
@@ -174,7 +180,7 @@ var optionsTemperature = {
 		fontType: "sans-serif"
 	},
 	axisX:{
- 		title:"Time (100 Milliseconds)",
+ 		title:"Time (Seconds)",
 		gridThickness: 0,
 		fontFamily: "Open Sans",
 		fontType: "sans-serif"
@@ -338,6 +344,17 @@ $("#powerCycleBtn").click(function(){
 $("#thrustAdjust").click(function(){
 	thrustPos = $("#thrustAdjust").val();
 	$("#thrusttxt").text(thrustPos);
+	sendData();
+});
+$("#idleBtn").click(function(){
+	restart = 0;
+	start = 0;
+	stop = 0;
+	thrustPos = 0;
+	abort = 0;
+	powerCycle = 0;
+	autoupdate = 0;
+	$("#statustxt").text("IDLE");
 	sendData();
 });
 
