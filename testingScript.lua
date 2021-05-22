@@ -17,7 +17,7 @@ ZERO_DEG_DUTY = 52
 TH_PIN = 6
 TH_START_DUTY = 50
 
-sda, scl = 1, 2
+sda, scl = 2, 1
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -39,6 +39,7 @@ accZ = 0
 temp = 0
 pressure = 0
 status={}
+noi2c = 0 -- 0 for operation, 1 for non-operation
 
 -- -------------------------------------------------------------------------- --
 --                                  FUNCTIONS                                 --
@@ -60,6 +61,7 @@ function receiveData()
     start = tonumber(status.start)
     stop = tonumber(status.stop)
     restart = tonumber(status.restart)
+    powerCycle = tonumber(status.powerCycle)
 end
 
 function sendData()
@@ -75,7 +77,6 @@ function sendData()
     sendStr = sendStr.. temp;
 
     -- use .. instead of + when adding strings
-    print(sendStr)
     return sendStr
 end
 
@@ -97,7 +98,11 @@ function updateDockRelease()
     end
 end
 
-
+function i2cSetup()
+    i2c.setup(0, sda, scl, i2c.SLOW)  -- call i2c.setup() only once
+    adxl345.setup()
+    bmp085.setup()
+end
 
 function setup()
 
@@ -105,15 +110,18 @@ function setup()
     dockRelease = 0 -- set status (start with DR closed)
     pwm.setup(DR_PIN, 50, DR_CLOSED_DUTY) -- setup pwm settings (50Hz)
     pwm.start(DR_PIN) -- start sending pwm signal
-
     pwm.setup(TH_PIN, 50, 50)
     pwm.start(TH_PIN)
 
-    -- accelerom3ter and baromter
-    i2c.setup(0, sda, scl, i2c.SLOW)  -- call i2c.setup() only once
-    adxl345.setup()
-    bmp085.setup()
+    if pcall(i2cSetup) then
+        print("i2c setup complete")
+    else
+        print("i2c unavailable")
+        noi2c = 1
+    end
+    
 end
+
 function setThrust()
     thrustVal = 50 + (thrustPos / 2)
     pwm.setduty(TH_PIN, thrustVal)
@@ -122,8 +130,16 @@ end
 
 
 function readAccelerometer()
-    accX,accY,accZ = adxl345.read()
-    pressure= bmp085.pressure()
+    if (noi2c == 1) then
+        accX = 0
+        accY = 0
+        accZ = 0
+        pressure = 0
+    else
+        accX,accY,accZ = adxl345.read()
+        pressure= bmp085.pressure()
+    end
+    
 
 end
 
@@ -167,11 +183,24 @@ function main()
     end
 
     if (powerCycle == 1) then
-        node.restart()
+        start = 0
+        stop = 0
+        thrustPos = 0
+        abort = 0
+        powerCycle = 0
+    else
+    
     end
     
     if (stop == 1) then
         start = 0
+        thrustPos = 0
+        
+    end
+
+     if (abort == 1) then
+        start = 0
+        stop = 1
         thrustPos = 0
         
     end
@@ -181,6 +210,7 @@ function main()
         stop = 1
         dockRelease = 0 -- locked
         thrustPos = 0
+        abort = 0
     end
     
     updateDockRelease()
