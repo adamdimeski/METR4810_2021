@@ -17,7 +17,7 @@ ZERO_DEG_DUTY = 52
 TH_PIN = 6
 TH_START_DUTY = 50
 
-sda, scl = 2, 1
+sda, scl = 1, 2
 
 -- ---------------------------- GLOBAL VARIABLES ---------------------------- --
 -- Variables is for things that will change throughout execution
@@ -40,6 +40,7 @@ temp = 0
 pressure = 0
 status={}
 noi2c = 0 -- 0 for operation, 1 for non-operation
+errorF = 0
 
 -- -------------------------------------------------------------------------- --
 --                                  FUNCTIONS                                 --
@@ -64,6 +65,21 @@ function receiveData()
     powerCycle = tonumber(status.powerCycle)
 end
 
+function receiveDataErrorWrapper()
+    if (pcall(receiveData) == false) then
+        print("error thrown with nil value in receive data; IDLEING")
+        dockRelease = 0
+        abort = 0
+        drServoPos = 0
+        thrustPos = 0
+        start = 0
+        stop = 0
+        restart = 0
+        powerCycle = 0
+        errorF = 1
+    end
+end
+
 function sendData()
     -- Sends all the status bits to the website
 
@@ -74,9 +90,27 @@ function sendData()
     sendStr = sendStr.. accY.. ",";
     sendStr = sendStr.. accZ.. ",";
     sendStr = sendStr.. pressure.. ",";
-    sendStr = sendStr.. temp;
+    sendStr = sendStr.. temp.. ",";
+    sendStr = sendStr.. errorF;
 
     -- use .. instead of + when adding strings
+    return sendStr
+end
+
+function sendDataErrorWrapper()
+    error,sendStr = pcall(sendData)
+    if (error == false) then
+        print("error thrown with nil value in send data; IDLEING")
+        sendStr = "";
+        sendStr = sendStr.. "0"..",";
+        sendStr = sendStr.. "0".. ",";
+        sendStr = sendStr.. "0".. ",";
+        sendStr = sendStr.. "0".. ",";
+        sendStr = sendStr.. "0".. ",";
+        sendStr = sendStr.. "0".. ",";
+        sendStr = sendStr.. "0".. ",";
+        sendStr = sendStr.. "1";
+    end
     return sendStr
 end
 
@@ -118,6 +152,7 @@ function setup()
     else
         print("i2c unavailable")
         noi2c = 1
+        errorF = 1
     end
     
 end
@@ -261,11 +296,6 @@ sys1:alarm(3000, tmr.ALARM_SINGLE, function()
     end)
 end)
 
-
-
-
-
-
 -- Start up the remote monitoring server
 srv=net.createServer(net.TCP)
 srv:listen(80,function(conn)
@@ -277,11 +307,11 @@ srv:listen(80,function(conn)
         status[k] = v
     end
     
-    receiveData() -- use the recieved data to repopulate our status variables
+    receiveDataErrorWrapper() -- use the recieved data to repopulate our status variables
     -- Send data to the server
     conn:send("HTTP/1.1 200 OK\n")
     conn:send("Access-Control-Allow-Origin: * \r\n\n\n")
-    conn:send(sendData()) -- send our current status variables to the website
+    conn:send(sendDataErrorWrapper()) -- send our current status variables to the website
   end)
   conn:on("sent",function(conn) conn:close() end)
 end)
