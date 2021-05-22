@@ -15,6 +15,7 @@ var accY = 0;
 var accZ = 0;
 var pressure = 0;
 var temperature = 0;
+var errorF = 0;
 
 var accDataX = [];
 var accDataY = [];
@@ -46,6 +47,7 @@ function receiveData(csv)
 	accZ = (parseInt(csv[4]) + accZOffset) * accMultiplier;
 	pressure = parseInt(csv[5])/100;
 	temperature = parseInt(csv[6]);
+	errorF = parseInt(csv[7]);
 	if (plot == 1)
 	{
 	  accDataX.push({x: (xCount * autoRefreshInterval * 0.001), y: accX});
@@ -57,6 +59,9 @@ function receiveData(csv)
 		$("#chartContainerAcc").CanvasJSChart().render()
 		$("#chartContainerPressure").CanvasJSChart().render()
 		$("#chartContainerTemperature").CanvasJSChart().render()
+	}
+	if(errorF == 1) {
+		$("#errortxt").text("TRUE");
 	}
 	//add more variables and unpack from data by incrementing the value in data
 }
@@ -324,6 +329,8 @@ $("#restartBtn").click(function(){
 	abort = 0;
 	powerCycle = 0;
 	autoupdate = 0;
+	errorF = 0
+	$("#errortxt").text("FALSE");
 	$("#statustxt").text("RESTARTED");
 	$("#dockingtxt").text("LOCKED");
 	sendData();
