@@ -1,6 +1,6 @@
 var ip_address = "192.168.137.100";
 
-var dockRelease = 1; // 0 for latched, 1 for unlatched
+var dockRelease = 0; // 0 for latched, 1 for unlatched
 var backupArrest = 0; // o for running, 1 for stopped
 var abort = 0; // 0 for normal operation ,1 for abort
 var drServoPos = 0; // Servo position for dock release, -0 if not being used
@@ -25,7 +25,7 @@ var xCount = 0;
 var plot = 1;
 //Do not add these variables to the FETCH request
 var autoupdate = 0;
-var autoRefreshInterval = 100; //milliseconds
+var autoRefreshInterval = 200; //milliseconds
 
 
 //add more variables here
@@ -34,17 +34,12 @@ var autoRefreshInterval = 100; //milliseconds
 function receiveData(csv)
 {
 	dockRelease = parseInt(csv[0]);
-	abort = parseInt(csv[1]);
-	drServoPos = parseInt(csv[2]);
-	thrustPos = parseInt(csv[3]);
-	start = parseInt(csv[4]);
-	stop = parseInt(csv[5]);
-	restart = parseInt(csv[6]);
-	accX = parseInt(csv[7]);
-	accY = parseInt(csv[8]);
-	accZ = parseInt(csv[9]);
-	pressure = parseInt(csv[10])/100;
-	temperature = parseInt(csv[11]);
+	thrustPos = parseInt(csv[1]);
+	accX = parseInt(csv[2]);
+	accY = parseInt(csv[3]);
+	accZ = parseInt(csv[4]);
+	pressure = parseInt(csv[5])/100;
+	temperature = parseInt(csv[6]);
 	if (plot == 1)
 	{
 	  accDataX.push({x: xCount, y: accX});
@@ -53,7 +48,6 @@ function receiveData(csv)
 		pressureData.push({x: xCount, y: pressure});
 		temperatureData.push({x: xCount, y: temperature});
 		xCount = xCount + 1;
-		console.log(xCount)
 		$("#chartContainerAcc").CanvasJSChart().render()
 		$("#chartContainerPressure").CanvasJSChart().render()
 		$("#chartContainerTemperature").CanvasJSChart().render()
@@ -64,10 +58,9 @@ function receiveData(csv)
 async function sendData()
 {
 	data = "dockRelease=" + dockRelease + ", " + "abort=" + abort + ", " + "drServoPos=" + drServoPos + ", "
-  + "thrustPos=" + thrustPos + ", " + "start=" + start + ", " + "stop=" + stop + ", " + "restart=" + restart;
+  + "thrustPos=" + thrustPos + ", " + "start=" + start + ", " + "stop=" + stop + ", " + "restart=" + restart + ", " + "powerCycle=" + powerCycle;
 
 	//add more variables to the string above to send to the microcontroller
-
 	try {
 		fetch(("http://" + ip_address + ":80"), {
 													method: 'POST',
@@ -77,10 +70,7 @@ async function sendData()
 	        				.then((response) => {
 										csv = $.csv.toArray(response);
 										receiveData(csv)
-										console.log(accX)
-										console.log(accY)
-										console.log(accZ)
-	            			console.log(data)
+										console.log(response)
 									}).catch(function(err) {
 													alert(err);
 									});
@@ -91,9 +81,9 @@ async function sendData()
 
 }
 
-(async() => {
+/**(async() => {
     await sendData();
-})();
+})();**/
 
 
 
@@ -222,26 +212,25 @@ $(document).ready(function(){
 
 	function refresh()
 	{
+		thrustPos = $("#thrustAdjust").val();
+		$("#thrusttxt").text(thrustPos);
+
 		if(autoupdate != 0)
 		{
-			thrustPos = $("#thrustAdjust").val();
-			$("#thrusttxt").text(thrustPos);
-
 			sendData();
-			$("#temptxt").text(temp + " °C");
-			//getting data and plotting it
 
-			if(dockRelease != 0)
-			{
-				$("#dockingtxt").text("ENABLED");
-			}
-			else
-			{
-				$("#dockingtxt").text("DISABLED");
-			}
+		}
 
+		$("#temptxt").text(temperature + " °C");
+		//getting data and plotting it
 
-
+		if(dockRelease != 0)
+		{
+			$("#dockingtxt").text("UNLOCKED");
+		}
+		else
+		{
+			$("#dockingtxt").text("LOCKED");
 		}
 	}
 
@@ -299,5 +288,58 @@ $("#startPlotBtn").click(function(){
 $("#stopPlotBtn").click(function(){
 	plot = 0
 });
+
+$("#startBtn").click(function(){
+	start = 1;
+	stop = 0;
+	restart = 0;
+	autoupdate = 1;
+	dockRelease = 1;
+	$("#statustxt").text("STARTED");
+	$("#dockingtxt").text("UNLOCKED");
+	sendData();
+});
+
+$("#stopBtn").click(function(){
+	start = 0;
+	restart = 0;
+	stop = 1;
+	autoupdate = 0;
+	$("#statustxt").text("STOPPED");
+	sendData();
+});
+
+$("#restartBtn").click(function(){
+	restart = 1;
+	start = 0;
+	stop = 0;
+	thrustPos = 0;
+	dockRelease = 0;
+	abort = 0;
+	powerCycle = 0;
+	autoupdate = 0;
+	$("#statustxt").text("RESTARTED");
+	$("#dockingtxt").text("LOCKED");
+	sendData();
+});
+
+$("#abortBtn").click(function(){
+	abort = 1
+	$("#statustxt").text("ABORTED");
+	sendData();
+});
+
+$("#powerCycleBtn").click(function(){
+	powerCycle = 1
+	$("#statustxt").text("Power Cycle Triggered");
+	sendData();
+});
+
+$("#thrustAdjust").click(function(){
+	thrustPos = $("#thrustAdjust").val();
+	$("#thrusttxt").text(thrustPos);
+	sendData();
+});
+
 
 });

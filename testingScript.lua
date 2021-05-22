@@ -67,12 +67,7 @@ function sendData()
 
     sendStr = "";
     sendStr = sendStr.. dockRelease..",";
-    sendStr = sendStr.. abort.. ",";
-    sendStr = sendStr.. drServoPos.. ",";
     sendStr = sendStr.. thrustPos.. ",";
-    sendStr = sendStr.. start.. ",";
-    sendStr = sendStr.. stop.. ",";
-    sendStr = sendStr.. restart.. ",";
     sendStr = sendStr.. accX.. ",";
     sendStr = sendStr.. accY.. ",";
     sendStr = sendStr.. accZ.. ",";
@@ -80,6 +75,7 @@ function sendData()
     sendStr = sendStr.. temp;
 
     -- use .. instead of + when adding strings
+    print(sendStr)
     return sendStr
 end
 
@@ -133,12 +129,7 @@ end
 
 function triggerAbort()
     if(abort == 1) then
-        abort = 0
         thrustPos = 0
-        gpio.write(8,gpio.HIGH)
-        sys2 = tmr.create()
-        sys2:alarm(300, tmr.ALARM_SINGLE, function() end)
-        gpio.write(8,gpio.LOW)
     end
 end
 
@@ -168,14 +159,35 @@ gpio.write(8,gpio.LOW)
 
 function main()
     -- setup thruster
-    print(node.heap())
+    
+    if (start == 1) then
+        dockRelease = 1 --unlocked
+        thrustPos = 11
+        -- check timer
+    end
+
+    if (powerCycle == 1) then
+        node.restart()
+    end
+    
+    if (stop == 1) then
+        start = 0
+        thrustPos = 0
+        
+    end
+    
+    if(restart == 1) then
+        start = 0
+        stop = 1
+        dockRelease = 0 -- locked
+        thrustPos = 0
+    end
+    
     updateDockRelease()
     setThrust()
     readAccelerometer()
     getTemp()
     triggerAbort()
-
-
 end
 
 
@@ -234,14 +246,11 @@ srv:listen(80,function(conn)
     for k, v in string.gmatch( string_payload, "(%w+)=(%w+)" ) do
         status[k] = v
     end
-
-    print(payload) -- Print what the website sent
+    
     receiveData() -- use the recieved data to repopulate our status variables
-    print(status.abort)
-
     -- Send data to the server
     conn:send("HTTP/1.1 200 OK\n")
-    conn:send("\r\n\n\n")
+    conn:send("Access-Control-Allow-Origin: * \r\n\n\n")
     conn:send(sendData()) -- send our current status variables to the website
   end)
   conn:on("sent",function(conn) conn:close() end)

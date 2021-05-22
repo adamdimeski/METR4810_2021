@@ -73,8 +73,8 @@
           </div>
           <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "mx-2" style = "text-align: left;">Start</label>
-            <label id = "starttxt" class = "mx-2" style = "text-align: left;">NO</label>
+            <label class = "mx-2" style = "text-align: left;">Status</label>
+            <label id = "statustxt" class = "mx-2" style = "text-align: left;">IDLE</label>
           </div>
           <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
@@ -108,12 +108,17 @@
             <button id = "startBtn" class = "m-2 btn btn-primary">Start</button>
             <button id = "stopBtn" class = "m-2 btn btn-primary">Stop</button>
             <button id = "restartBtn" class = "m-2 btn btn-warning">Restart</button>
-            <button id = "abbortBtn" class = "m-2 btn btn-danger">Abort</button>
+            <button id = "abortBtn" class = "m-2 btn btn-danger">Abort</button>
           </div>
           <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
             <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Thrust Adjust</label>
             <input class = "m-2" type="range" min="0" max="100" value="0" class="slider" id="thrustAdjust">
+          </div>
+          <br>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Power Cycle</label>
+            <button id = "powerCycleBtn" class = "m-2 btn btn-danger">Power Cycle</button>
           </div>
           <br>
         </div>
