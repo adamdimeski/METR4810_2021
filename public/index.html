@@ -4,9 +4,12 @@
 
   <script src="js/jquery.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery-csv/1.0.11/jquery.csv.js"></script>
-  <script src="js/jcanvas.min.js"></script>
+  <script src="https://canvasjs.com/assets/script/jquery.canvasjs.min.js"></script>
   <link rel="stylesheet" type="text/css" href="css/style.css">
-  <head>
+  <link rel="preconnect" href="https://fonts.gstatic.com">
+  <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@300&display=swap" rel="stylesheet">
+
+  <head style  = "font-family: 'Open Sans', sans-serif;">
     <meta charset="utf-8">
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=yes">
     <link rel="stylesheet" href = "css/bootstrap.min.css" rel="stylesheet" type="text/css" >
@@ -15,84 +18,108 @@
 
     <title>METR4810</title>
   </head>
-  <body style = "background-color: rgb(40,40,40); color: white;">
+  <body style = "background-color: rgb(40,40,40); color: white; font-family: 'Open Sans', sans-serif;">
 
-		<nav class="navbar navbar-expand-sm bg-dark navbar-dark">
-		  <a class="navbar-brand" href="#">METR4810 Lander Control</a>
-		  </button>
-		</nav>
 
+    <div class="bg-imagealign-middle" style=" background-image: url('mars-header.jpg'); height: 50vh; background-repeat: no-repeat; background-size: cover; text-align: center; ">
+  		  <h1 class="align-middle">METR4810 Lander Control</h1>
+    </div>
 	<div style="margin-top:30px; margin-left: 20px;">
 
     <div>
       <h2>Overview</h2>
 
-  <h2 style = "text-align: center;">Control Panel</h2>
-  <div id = "controlpanel" class = "row">
-      <div id = "controlpanel_1" class = "col-4">
+  <div class="d-flex flex-wrap justify-content-center">
+    <div class="p-2 m-2" id="chartContainerAcc" style="height: 300px; width: 25%;"></div>
+    <div class="p-2 m-2" id="chartContainerPressure" style="height: 300px; width: 25%;"></div>
+    <div class="p-2 m-2" id="chartContainerTemperature" style="height: 300px; width: 25%; "></div>
+  </div>
+  <br>
+  <hr class="solid" style = "border: 1px solid gray">
+  <br>
+  <h2>Control Panel</h2>
+  <div class="d-flex flex-wrap justify-content-center" id = "controlpanel">
+      <div id = "controlpanel_1" class="d-flex flex-wrap flex-column">
         <h2> Settings</h2>
         <br>
-        <div class = "row">
-          <label class = "col" style = "text-align: left;">IP Address: </label>
-          <input class = "col control_button" type="text" id="ip_addr" style = "background-color: white; color: black"><br>
-          <button class = "col-2 control_button" id = "ip_address_button">Set</button>
+        <div class = "p-2 d-flex flex-row d-flex justify-content-between">
+          <label class = "m-2" style = "text-align: left;">IP Address: </label>
+          <input class = "m-2 btn btn-primary" type="text" id="ip_addr" style = "background-color: white; color: black"><br>
+          <br class = "p-2">
+          <button class = "m-2 justify-content-end btn btn-primary" id = "ip_address_button">Set</button>
         </div>
-        <br>
-        <div class = "row">
-          <label class = "col" style = "text-align: left;">Auto-Refresh</label>
-          <label id = "autoRefreshtxt"class = "col-2" style = "text-align: left;">OFF</label>
-          <button id = "autoRefreshbtn" class = "col-2 control_button" id = "ip_address_button">Set/Reset</button>
+        <br class = "p-2">
+        <div class = "d-flex flex-row d-flex justify-content-between">
+          <label class = "m-2" style = "text-align: left;">Auto-Refresh</label>
+          <label id = "autoRefreshtxt" class = "m-2">OFF</label>
+          <br class = "p-2">
+          <button id = "autoRefreshbtn" class = "m-2 btn btn-primary">Set/Reset</button>
+        </div>
+        <div class = "d-flex flex-row d-flex justify-content-between">
+          <label class = "m-2" style = "text-align: left;">Plot</label>
+          <button id = "startPlotBtn" class = "m-2  btn btn-primary">Start</button>
+          <button id = "stopPlotBtn" class = "m-2  btn btn-primary">Stop</button>
+          <button id = "clearPlotBtn" class = "m-2  btn btn-primary">Clear</button>
         </div>
         <br>
       </div>
-      <div id = "controlpanel_2" class = "col-3">
-        <div style = "text-align: center; margin-top: 0px; margin: 10px; font-size: 14px;">
+      <div id = "controlpanel_2" class="d-flex flex-wrap flex-column">
+        <div style = "text-align: center; margin-top: 0px; margin: 10px;">
           <h2> Status</h2>
-          <div class = "row" style = "">
-            <label class = "col-6" style = "text-align: left;">IP Address</label>
-            <label id = "ipAdresstxt"class = "col-6" style = "text-align: left;">IP Address</label>
+          <div class = "d-flex flex-row d-flex justify-content-between" style = "">
+            <label class = "mx-2" style = "text-align: left;">IP Address</label>
+            <br class = "mx-5">
+            <label id = "ipAdresstxt" class = "mx-2" style = "text-align: left;">IP Address</label>
           </div>
           <br>
-          <div class = "row" style = "">
-            <label class = "col-6" style = "text-align: left;">Start</label>
-            <label id = "starttxt"class = "col-6" style = "text-align: left;">NO</label>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "mx-2" style = "text-align: left;">Status</label>
+            <label id = "statustxt" class = "mx-2" style = "text-align: left;">IDLE</label>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col-6" style = "text-align: left;"> Thrust %</label>
-            <label id = "thrusttxt"class = "col-6" style = "text-align: left;">0</label>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "mx-2" style = "text-align: left;"> Thrust %</label>
+            <label id = "thrusttxt" class = "mx-2" style = "text-align: left;">0</label>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col-6" style = "text-align: left;" >Docking Adaptor</label>
-            <label id = "dockingtxt"class = "col-6" style = "text-align: left;">DISABLED</label>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "mx-2" style = "text-align: left;" >Docking Adaptor</label>
+            <label id = "dockingtxt" class = "mx-2" style = "text-align: left;">LOCKED</label>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col-6" style = "text-align: left;" >Backup Arrestor</label>
-            <label id = "backuptxt"class = "col-6" style = "text-align: left;">DISABLED</label>
+          <div class = "rd-flex flex-row d-flex justify-content-between">
+            <label class = "mx-2" style = "text-align: left;" >Temperature</label>
+            <label id = "temptxt" class = "mx-2" style = "text-align: left;">0</label>
           </div>
           <br>
       </div>
       </div>
-      <div id = "controlpanel_3" class = "col-4">
-        <div style = "text-align: center; margin-top: 0px; margin: 10px; font-size: 14px;">
+      <div id = "controlpanel_3" class="d-flex flex-wrap flex-column">
+        <div style = "text-align: center; margin-top: 0px; margin: 10px;">
           <h2> Control</h2>
-          <div class = "row" style = "text-align: left;">
-            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
-            <button id = "dockActivateBtn" class = "col-2 control_button">Activate</button>
-            <button id = "dockDeactivateBtn"class = "col-2 control_button">Deactivate</button>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
+            <button id = "dockActivateBtn" class = "m-2 btn btn-primary">Unlock</button>
+            <button id = "dockDeactivateBtn" class = "m-2 btn btn-primary">Lock</button>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Backup Arrestor</label>
-            <button id = "arrestActivateBtn" class = "col-2 control_button">Activate</button>
-            <button id = "arrestDeactivateBtn"class = "col-2 control_button">Deactivate</button>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "m-2">Control</label>
+            <button id = "startBtn" class = "m-2 btn btn-primary">Start</button>
+            <button id = "stopBtn" class = "m-2 btn btn-primary">Stop</button>
+            <button id = "restartBtn" class = "m-2 btn btn-warning">Restart</button>
+            <button id = "abortBtn" class = "m-2 btn btn-danger">Abort</button>
+            <button id = "idleBtn" class = "m-2 btn btn-danger">Idle</button>
           </div>
           <br>
-          <div class = "row">
-            <label class = "col" style = "text-align: left; white-space: nowrap; overflow: hidden;">Thrust Adjust</label>
-            <input type="range" min="0" max="100" value="0" class="slider" id="thrustAdjust">
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Thrust Adjust</label>
+            <input class = "m-2" type="range" min="0" max="100" value="0" class="slider" id="thrustAdjust">
+          </div>
+          <br>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Power Cycle</label>
+            <button id = "powerCycleBtn" class = "m-2 btn btn-danger">Power Cycle</button>
           </div>
           <br>
         </div>
