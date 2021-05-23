@@ -215,7 +215,7 @@ var optionsTemperature = {
 		showInLegend: true,
 		dataPoints: temperatureData
 	}]
-
+};
 //Graphs initialised
 $(function () {
 	$("#chartContainerAcc").CanvasJSChart(optionsAcc);
