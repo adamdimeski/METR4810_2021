@@ -5,7 +5,7 @@ wifiPwd = "1300655506"
 
 -- Pin mappings
 DR_PIN = 5
-DR_OPEN_DUTY = 69
+DR_OPEN_DUTY = 63
 DR_CLOSED_DUTY = 98
 
 -- Thruster
