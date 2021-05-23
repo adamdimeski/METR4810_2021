@@ -10,44 +10,44 @@ var start = 0; // start of mission, activates release from dock and activation o
 var stop = 0;
 var restart = 0; // resets system for another mission, 0 for normal state, 1 for reset.
 var powerCycle = 0; // 0 for normal state, 1 for restarting the circuits
-var accX = 0;
-var accY = 0;
-var accZ = 0;
-var pressure = 0;
-var temperature = 0;
-var errorF = 0;
+var accX = 0; // acceleration data X-direction
+var accY = 0; // acceleration data Y-direction
+var accZ = 0; // acceleration data Z-direction
+var pressure = 0; // Pressure data
+var temperature = 0; // Temperature data
+var errorF = 0; // error flag from lander
 
-var accDataX = [];
-var accDataY = [];
-var accDataZ = [];
-var pressureData = [];
-var temperatureData = [];
-var xCount = 0;
-var plot = 1;
+var accDataX = []; // acceleration data X-direction dataset for graphing
+var accDataY = []; // acceleration data Y-direction dataset for graphing
+var accDataZ = []; // acceleration data Z-direction dataset for graphing
+var pressureData = []; // presssure dataset for graphing
+var temperatureData = []; // temperature dataset for graphing
+var xCount = 0; // Y-axis acount for graphing, based on refresh cyce of web requests
+var plot = 1; // flag for plotting/not plotting
 
-var accXOffset = 240;
-var accYOffset = 20;
-var accZOffset = 108;
-var accMultiplier = 0.004;
+var accXOffset = 240; //accleration offset due to gravity
+var accYOffset = 20; // acceleration offset due to gravity
+var accZOffset = 108; // accleration offset due to gravity
+var accMultiplier = 0.004; // scalar value for acclerometer readings
 
 //Do not add these variables to the FETCH request
-var autoupdate = 0;
-var autoRefreshInterval = 200; //milliseconds
+var autoupdate = 0; // auto update flag, 0, for stopped, 1 for auto-update
+var autoRefreshInterval = 200; //refresh interval of auto fetch requests, milliseconds
 
 
-//add more variables here
-// no negative numbers
 
+// Function unpackes response received from the lander into the mission variables
 function receiveData(csv)
 {
 	dockRelease = parseInt(csv[0]);
 	thrustPos = parseInt(csv[1]);
-	accX = (parseInt(csv[2]) - accXOffset) * accMultiplier;
-	accY = (parseInt(csv[3]) + accYOffset) * accMultiplier;
-	accZ = (parseInt(csv[4]) + accZOffset) * accMultiplier;
+	accX = (parseInt(csv[2]) - accXOffset) * accMultiplier; // correction of acceleration data
+	accY = (parseInt(csv[3]) + accYOffset) * accMultiplier; // correction of acceleration data
+	accZ = (parseInt(csv[4]) + accZOffset) * accMultiplier; // correction of acceleration data
 	pressure = parseInt(csv[5])/100;
 	temperature = parseInt(csv[6]);
 	errorF = parseInt(csv[7]);
+	// if plot flag is true, the telemetry data is plotted
 	if (plot == 1)
 	{
 	  accDataX.push({x: (xCount * autoRefreshInterval * 0.001), y: accX});
@@ -55,19 +55,22 @@ function receiveData(csv)
 		accDataZ.push({x: (xCount * autoRefreshInterval * 0.001), y: accZ});
 		pressureData.push({x: (xCount * autoRefreshInterval * 0.001), y: pressure});
 		temperatureData.push({x: (xCount * autoRefreshInterval * 0.001), y: temperature});
-		xCount = xCount + 1;
+		xCount = xCount + 1; //time increment is increased
 		$("#chartContainerAcc").CanvasJSChart().render()
 		$("#chartContainerPressure").CanvasJSChart().render()
 		$("#chartContainerTemperature").CanvasJSChart().render()
 	}
+	//If an error is flagged by the lander, it shown to the user
 	if(errorF == 1) {
 		$("#errortxt").text("TRUE");
 	}
-	//add more variables and unpack from data by incrementing the value in data
 }
 
+
+//fetch request send to lander in the form of POST request. Allows same origin requests
 async function sendData()
 {
+	//send string is assembled
 	data = "dockRelease=" + dockRelease + ", " + "abort=" + abort + ", " + "drServoPos=" + drServoPos + ", "
   + "thrustPos=" + thrustPos + ", " + "start=" + start + ", " + "stop=" + stop + ", " + "restart=" + restart + ", " + "powerCycle=" + powerCycle;
 
@@ -97,7 +100,7 @@ async function sendData()
 })();**/
 
 
-
+//Canvas.js graphing settings and initialisation
 var optionsAcc = {
 	theme: "dark2",
 	backgroundColor: "rgba(0,0,0,0.4)",
@@ -212,7 +215,8 @@ var optionsTemperature = {
 		showInLegend: true,
 		dataPoints: temperatureData
 	}]
-};
+
+//Graphs initialised
 $(function () {
 	$("#chartContainerAcc").CanvasJSChart(optionsAcc);
 	$("#chartContainerPressure").CanvasJSChart(optionsPressure);
@@ -222,10 +226,11 @@ $(function () {
 
 
 
-
+//Jquery reeady function that contains event handlers and auto-refresh function
 $(document).ready(function(){
 	$("#ipAdresstxt").text(ip_address);
 
+	//Sends a fetch request on an interval if the auto-update flag is true
 	function refresh()
 	{
 		thrustPos = $("#thrustAdjust").val();
@@ -252,7 +257,7 @@ $(document).ready(function(){
 
 	setInterval(function(){refresh();},autoRefreshInterval);
 
-
+//Button click event handlers
 $("#ip_address_button").click(function(){
 		ip_address = $("#ip_addr").val();
 		$("#ipAdresstxt").text(ip_address);
