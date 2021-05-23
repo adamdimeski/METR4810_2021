@@ -325,8 +325,11 @@ $("#stopBtn").click(function(){
 	start = 0;
 	restart = 0;
 	stop = 1;
+	thrustPos = 0;
 	autoupdate = 0;
 	$("#statustxt").text("STOPPED");
+	$("#thrusttxt").text(thrustPos);
+	$("#thrustAdjust").val(0);
 	sendData();
 });
 
@@ -361,7 +364,6 @@ $("#powerCycleBtn").click(function(){
 $("#thrustAdjust").click(function(){
 	thrustPos = $("#thrustAdjust").val();
 	$("#thrusttxt").text(thrustPos);
-	$('#slider').roundSlider('setValue', thrustPos + " %");
 	sendData();
 });
 $("#idleBtn").click(function(){

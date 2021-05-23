@@ -23,20 +23,16 @@
   </head>
   <body style = "background: #659999;background: -webkit-linear-gradient(to right, #659999, #f4791f);background: linear-gradient(to right, #659999, #f4791f); color: white; font-family: 'Open Sans', sans-serif;">
     <div class="bg-imagealign-middle" style=" background-image: url('mars-header.jpg'); height: 40vh; background-repeat: no-repeat; background-size: cover; text-align: center; ">
-
         <h1 class="bg-imagealign-middle">METR4810 Lander Control</h1>
     </div>
-    <br>
 	<div style="margin-top:30px; margin-left: 20px; text-align: center">
 
   <h2>Control Panel</h2>
-  <br>
-  <div class="p-5 mr-4 d-flex flex-wrap justify-content-center" id = "controlpanel">
+  <div class="p-4 px-5 mr-4 m-1 d-flex flex-wrap justify-content-center" id = "controlpanel">
       <div id = "controlpanel_1" class="d-flex flex-wrap flex-column">
         <h2> Settings</h2>
-        <br>
         <div class = "p-2 d-flex flex-row d-flex justify-content-between">
-          <label class = "m-2" style = "text-align: left;">IP Address: </label>
+          <label class = " mt-3 m-2" style = "text-align: left;">IP Address: </label>
           <input class = "m-2 btn btn-primary" type="text" id="ip_addr" style = "background-color: white; color: black"><br>
           <br class = "p-2">
           <button class = "m-2 justify-content-end btn btn-primary" id = "ip_address_button">Set</button>
@@ -49,17 +45,16 @@
           <button id = "autoRefreshbtn" class = "m-2 btn btn-primary">Set/Reset</button>
         </div>
         <div class = "d-flex flex-row d-flex justify-content-between">
-          <label class = "m-2" style = "text-align: left;">Plot</label>
+          <label class = "mt-2 m-2" style = "text-align: left;">Plot</label>
           <button id = "startPlotBtn" class = "m-2  btn btn-primary">Start</button>
           <button id = "stopPlotBtn" class = "m-2  btn btn-primary">Stop</button>
-          <button id = "clearPlotBtn" class = "m-2  btn btn-primary">Clear</button>
+          <button id = "clearPlotBtn" class = "m-2  btn btn-warning">Clear</button>
         </div>
         <br>
       </div>
-      <div id = "controlpanel_2" class="mx-5 px-4 d-flex flex-wrap flex-column">
+      <div id = "controlpanel_2" class="mx-4 px-4 m-1 d-flex flex-wrap flex-column">
         <div style = "text-align: center; margin-top: 0px; margin: 10px;">
           <h2> Status</h2>
-          <br>
           <div class = "d-flex flex-row d-flex justify-content-between" style = "">
             <label class = "mx-2" style = "text-align: left;">IP Address</label>
             <br class = "mx-5">
@@ -90,49 +85,44 @@
             <label class = "mx-2" style = "text-align: left;" >Error</label>
             <label id = "errortxt" class = "mx-2" style = "text-align: left;">False</label>
           </div>
-          <br>
       </div>
       </div>
-      <div id = "controlpanel_3" class="d-flex flex-wrap flex-column">
+      <div id = "controlpanel_3" class="m-1 d-flex flex-wrap flex-column">
         <div style = "text-align: center; margin-top: 0px; margin: 10px;">
           <h2>Control</h2>
-          <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
-            <button id = "dockActivateBtn" class = "m-2 btn btn-primary">Unlock</button>
-            <button id = "dockDeactivateBtn" class = "m-2 btn btn-primary">Lock</button>
+            <label class = "mt-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
+            <button id = "dockActivateBtn" class = "m-1 btn btn-primary">Unlock</button>
+            <button id = "dockDeactivateBtn" class = "m-1 btn btn-primary">Lock</button>
           </div>
-          <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "m-2">Control</label>
-            <button id = "startBtn" class = "m-2 btn btn-primary">Start</button>
-            <button id = "stopBtn" class = "m-2 btn btn-primary">Stop</button>
+            <label class = "mt-3">Control</label>
+            <button id = "startBtn" class = "m-2 btn btn-success">Start</button>
+            <button id = "stopBtn" class = "m-2 btn btn-danger">Stop</button>
+          </div>
+          <div class = "d-flex flex-row d-flex justify-content-between">
+            <label class = "mt-3">Control</label>
             <button id = "restartBtn" class = "m-2 btn btn-warning">Restart</button>
             <button id = "idleBtn" class = "m-2 btn btn-danger">Idle</button>
           </div>
-          <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Thrust Adjust</label>
-            <input class = "m-2" type="range" min="0" max="100" value="0" class="slider" id="thrustAdjust">
+            <label class = "m-1" style = "text-align: left; white-space: nowrap; overflow: hidden;">Thrust Adjust</label>
+            <input class = "m-1" type="range" min="0" max="100" value="0" class="slider" id="thrustAdjust">
           </div>
-          <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Power Cycle</label>
-            <button id = "powerCycleBtn" class = "m-2 btn btn-danger">Power Cycle</button>
+            <label class = "mt-2 m-1" style = "text-align: left; white-space: nowrap; overflow: hidden;">Power Cycle</label>
+            <button id = "powerCycleBtn" class = "m-1 btn btn-danger">Power Cycle</button>
           </div>
-          <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
-            <label class = "m-2">Abort</label>
-            <button id = "abortBtn" class = "m-2 btn btn-danger">Abort</button>
+            <label class = "mt-2 m-1">Abort</label>
+            <button id = "abortBtn" class = "m-1 btn btn-danger">Abort</button>
           </div>
-          <br>
         </div>
       </div>
     </div>
     <br>
     <h2>Telemetry</h2>
-    <br>
-    <div id = "controlpanel" class="p-5 mr-4 d-flex flex-wrap justify-content-center">
+    <div id = "controlpanel" class="p-4 mr-4 d-flex flex-wrap justify-content-center">
       <div class="p-2 m-2" id="chartContainerAcc" style="height: 300px; width: 25%;"></div>
       <div class="p-2 m-2" id="chartContainerPressure" style="height: 300px; width: 25%;"></div>
       <div class="p-2 m-2" id="chartContainerTemperature" style="height: 300px; width: 25%; "></div>

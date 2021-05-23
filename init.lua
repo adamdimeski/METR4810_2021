@@ -149,7 +149,7 @@ end
 
 -- sets the pwm value corresponding the thrust %
 function setThrust()
-    if (thrustPos > 25) 
+    if (thrustPos > 25) then
         thrustVal = 50 + (25 / 2)
     else
         thrustVal = 50 + (thrustPos / 2)
@@ -192,7 +192,6 @@ function main()
     -- if statements change the status of lander depending on mission parameters
     if (start == 1) then
         dockRelease = 1 --unlocked
-        thrustPos = 11
         -- check timer
     end
 
