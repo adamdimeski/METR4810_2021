@@ -100,6 +100,7 @@ async function sendData()
 
 var optionsAcc = {
 	theme: "dark2",
+	backgroundColor: "rgba(0,0,0,0.4)",
 	title: {
 		text: "Acceleration",
 		fontFamily: "Open Sans",
@@ -146,6 +147,7 @@ var optionsAcc = {
 
 var optionsPressure = {
 	theme: "dark2",
+	backgroundColor: "rgba(0,0,0,0.4)",
 	title: {
 		text: "Pressure",
 		fontFamily: "Open Sans",
@@ -179,6 +181,8 @@ var optionsPressure = {
 
 var optionsTemperature = {
 	theme: "dark2",
+	backgroundColor: "rgba(0,0,0,0.4)",
+	cornerRadius: 4,
 	title: {
 		text: "Temperature",
 		fontFamily: "Open Sans",
@@ -221,12 +225,12 @@ $(function () {
 
 $(document).ready(function(){
 	$("#ipAdresstxt").text(ip_address);
-	$("#slider").roundSlider();
+
 	function refresh()
 	{
 		thrustPos = $("#thrustAdjust").val();
 		$("#thrusttxt").text(thrustPos);
-
+		$('#slider').roundSlider('setValue', thrustPos + " %");
 		if(autoupdate != 0)
 		{
 			sendData();
@@ -352,6 +356,7 @@ $("#powerCycleBtn").click(function(){
 $("#thrustAdjust").click(function(){
 	thrustPos = $("#thrustAdjust").val();
 	$("#thrusttxt").text(thrustPos);
+	$('#slider').roundSlider('setValue', thrustPos + " %");
 	sendData();
 });
 $("#idleBtn").click(function(){

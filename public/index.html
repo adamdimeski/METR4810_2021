@@ -20,30 +20,18 @@
     <link rel="stylesheet" href = "css/bootstrap.min.css" rel="stylesheet" type="text/css" >
     <script src="js/bootstrap.min.js"></script>
 
-
-    <title>METR4810</title>
   </head>
-  <body style = "background-color: rgb(40,40,40); color: white; font-family: 'Open Sans', sans-serif;">
-    <div id="slider"></div>
-    
-    <div class="bg-imagealign-middle" style=" background-image: url('mars-header.jpg'); height: 50vh; background-repeat: no-repeat; background-size: cover; text-align: center; ">
-  		  <h1 class="align-middle">METR4810 Lander Control</h1>
+  <body style = "background: #659999;background: -webkit-linear-gradient(to right, #659999, #f4791f);background: linear-gradient(to right, #659999, #f4791f); color: white; font-family: 'Open Sans', sans-serif;">
+    <div class="bg-imagealign-middle" style=" background-image: url('mars-header.jpg'); height: 40vh; background-repeat: no-repeat; background-size: cover; text-align: center; ">
+
+        <h1 class="bg-imagealign-middle">METR4810 Lander Control</h1>
     </div>
-	<div style="margin-top:30px; margin-left: 20px;">
+    <br>
+	<div style="margin-top:30px; margin-left: 20px; text-align: center">
 
-    <div>
-      <h2>Overview</h2>
-
-  <div class="d-flex flex-wrap justify-content-center">
-    <div class="p-2 m-2" id="chartContainerAcc" style="height: 300px; width: 25%;"></div>
-    <div class="p-2 m-2" id="chartContainerPressure" style="height: 300px; width: 25%;"></div>
-    <div class="p-2 m-2" id="chartContainerTemperature" style="height: 300px; width: 25%; "></div>
-  </div>
-  <br>
-  <hr class="solid" style = "border: 1px solid gray">
-  <br>
   <h2>Control Panel</h2>
-  <div class="d-flex flex-wrap justify-content-center" id = "controlpanel">
+  <br>
+  <div class="p-5 mr-4 d-flex flex-wrap justify-content-center" id = "controlpanel">
       <div id = "controlpanel_1" class="d-flex flex-wrap flex-column">
         <h2> Settings</h2>
         <br>
@@ -68,9 +56,10 @@
         </div>
         <br>
       </div>
-      <div id = "controlpanel_2" class="d-flex flex-wrap flex-column">
+      <div id = "controlpanel_2" class="mx-5 px-4 d-flex flex-wrap flex-column">
         <div style = "text-align: center; margin-top: 0px; margin: 10px;">
           <h2> Status</h2>
+          <br>
           <div class = "d-flex flex-row d-flex justify-content-between" style = "">
             <label class = "mx-2" style = "text-align: left;">IP Address</label>
             <br class = "mx-5">
@@ -106,7 +95,8 @@
       </div>
       <div id = "controlpanel_3" class="d-flex flex-wrap flex-column">
         <div style = "text-align: center; margin-top: 0px; margin: 10px;">
-          <h2> Control</h2>
+          <h2>Control</h2>
+          <br>
           <div class = "d-flex flex-row d-flex justify-content-between">
             <label class = "m-2" style = "text-align: left; white-space: nowrap; overflow: hidden;">Docking Adaptor</label>
             <button id = "dockActivateBtn" class = "m-2 btn btn-primary">Unlock</button>
@@ -135,6 +125,15 @@
         </div>
       </div>
     </div>
+    <br>
+    <h2>Telemetry</h2>
+    <br>
+    <div id = "controlpanel" class="p-5 mr-4 d-flex flex-wrap justify-content-center">
+      <div class="p-2 m-2" id="chartContainerAcc" style="height: 300px; width: 25%;"></div>
+      <div class="p-2 m-2" id="chartContainerPressure" style="height: 300px; width: 25%;"></div>
+      <div class="p-2 m-2" id="chartContainerTemperature" style="height: 300px; width: 25%; "></div>
+    </div>
+
 
 
     </div>
