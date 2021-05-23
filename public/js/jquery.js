@@ -218,9 +218,10 @@ $(function () {
 
 
 
+
 $(document).ready(function(){
 	$("#ipAdresstxt").text(ip_address);
-
+	$("#slider").roundSlider();
 	function refresh()
 	{
 		thrustPos = $("#thrustAdjust").val();
